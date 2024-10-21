@@ -155,7 +155,7 @@ const optimizeExplainerSeo = async (
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-4", // Use the desired OpenAI model
+      model: "gpt-3.5-turbo", // Use the desired OpenAI model
       messages: [{ role: "user", content: prompt }],
     });
     const resultText = result.choices[0].message.content;
