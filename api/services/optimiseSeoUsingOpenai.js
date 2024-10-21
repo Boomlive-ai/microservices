@@ -17,7 +17,7 @@ const determineArticleType = async (content) => {
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Use the desired OpenAI model (GPT-4 in this case)
+      model: "gpt-3.5-turbo", // Use the desired OpenAI model (GPT-4 in this case) 
       messages: [{ role: "user", content: prompt }],
     });
     const resultText = result.choices[0].message.content;
