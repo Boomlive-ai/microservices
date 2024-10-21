@@ -92,7 +92,7 @@ const optimizeFactcheckSeo = async (
       messages: [{ role: "user", content: prompt }],
     });
     const resultText = result.choices[0].message.content;
-    console.log(resultText); // For debugging
+    //console.log(resultText); // For debugging
 
     const jsonResponseStart = resultText.indexOf("{");
     const jsonResponseEnd = resultText.lastIndexOf("}");
@@ -102,13 +102,14 @@ const optimizeFactcheckSeo = async (
     );
 
     const jsonResponse = JSON.parse(jsonString);
-
-    jsonResponse["Sub Headings (H2)"] = jsonResponse["Sub Headings (H2)"]
-      .replace(/## /g, "") // Remove '## ' symbols
-      .replace(/\n/g, ""); // Remove new line characters
-    jsonResponse["Sub Headings (H3)"] = jsonResponse["Sub Headings (H3)"]
-      .replace(/## /g, "") // Remove '## ' symbols
-      .replace(/\n/g, ""); // Remove new line characters
+    console.log(jsonResponse);
+    
+    // jsonResponse["Sub Headings (H2)"] = jsonResponse["Sub Headings (H2)"]
+    //   .replace(/## /g, "") // Remove '## ' symbols
+    //   .replace(/\n/g, ""); // Remove new line characters
+    // jsonResponse["Sub Headings (H3)"] = jsonResponse["Sub Headings (H3)"]
+    //   .replace(/## /g, "") // Remove '## ' symbols
+    //   .replace(/\n/g, ""); // Remove new line characters
     return jsonResponse; // Return the JSON object
   } catch (error) {
     console.error("Error generating fact-check SEO:", error);
@@ -159,7 +160,7 @@ const optimizeExplainerSeo = async (
       messages: [{ role: "user", content: prompt }],
     });
     const resultText = result.choices[0].message.content;
-    console.log(resultText); // For debugging
+    // console.log(resultText); // For debugging
 
     const jsonResponseStart = resultText.indexOf("{");
     const jsonResponseEnd = resultText.lastIndexOf("}");
@@ -167,7 +168,8 @@ const optimizeExplainerSeo = async (
       jsonResponseStart,
       jsonResponseEnd + 1
     );
-
+    console.log(jsonString);
+    
     const jsonResponse = JSON.parse(jsonString);
 
     jsonResponse["Sub Headings (H2, H3)"] = jsonResponse[
