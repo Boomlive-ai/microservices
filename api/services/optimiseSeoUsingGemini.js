@@ -154,7 +154,8 @@ Now, provide the following parameters in JSON format based on the article analys
   "Tags": "",
   "Meta Title": "",
   "Meta Description": "",
-  "Sub Headings (H2, H3)": "",
+  "Sub Headings (H2)": "",
+  "Sub Headings (H3)": "",
   "Keywords (Short and Long Tail)": "",
   "Article Summary Block": {
       "Heading": "",
@@ -194,7 +195,7 @@ Now, provide the following parameters in JSON format based on the article analys
 };
 
 // Main function to optimize SEO based on article type
-const optimizeSeo = async (reqBody) => {
+const optimizeSeoUsingGemini = async (reqBody) => {
   const { headline, description, articleText } = reqBody;
 
   if (!articleText) {
@@ -212,5 +213,5 @@ const optimizeSeo = async (reqBody) => {
 };
 
 module.exports = {
-  optimizeSeo,
+  optimizeSeoUsingGemini,
 };

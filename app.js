@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const cors = require('cors');
 const { sendContactEmail } = require("./api/services/emailService");
-const { optimizeSeo} = require("./api/services/optimiseSEO");
+const { optimizeSeoUsingOpenAI} = require("./api/services/optimiseSeoUsingOpenai");
 const { summarizeNews, extractSentimentFromNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 const fileUpload = require('express-fileupload');
 const app = express();
@@ -45,7 +45,7 @@ app.post("/api/optimize-seo", async (req, res) => {
   }
 
   try {
-    const optimizationResults = await optimizeSeo({ headline, description, articleText });
+    const optimizationResults = await optimizeSeoUsingOpenAI({ headline, description, articleText });
     res.status(200).json(optimizationResults); // Send back the SEO optimization results
   } catch (error) {
     res.status(500).json({ error: error.message });
