@@ -103,8 +103,7 @@ const optimizeFactcheckSeo = async (
 
     const jsonResponse = JSON.parse(jsonString);
     console.log(jsonResponse);
-    console.error("Error generating fact-check SEO:", error);
-
+    
     // jsonResponse["Sub Headings (H2)"] = jsonResponse["Sub Headings (H2)"]
     //   .replace(/## /g, "") // Remove '## ' symbols
     //   .replace(/\n/g, ""); // Remove new line characters
@@ -181,7 +180,6 @@ const optimizeExplainerSeo = async (
     // ]
     //   .replace(/## /g, "") // Remove '## ' symbols
     //   .replace(/\n/g, ""); // Remove new line characters
-    console.error("Error generating explainer SEO:", error);
 
     return jsonResponse; // Return the JSON object
   } catch (error) {
