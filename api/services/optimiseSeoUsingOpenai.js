@@ -17,7 +17,7 @@ const determineArticleType = async (content) => {
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Use the desired OpenAI model (GPT-4 in this case) 
+      model: "gpt-3.5-turbo", // gpt-3.5-turbo or gpt-4 Use the desired OpenAI model (GPT-4 in this case) 
       messages: [{ role: "user", content: prompt }],
     });
     const resultText = result.choices[0].message.content;
@@ -149,7 +149,7 @@ const optimizeExplainerSeo = async (
     "Sub Headings (H3)": "",
     "Keywords (Short and Long Tail)": "",
     "Article Summary Block": {
-        "Heading": "",
+        "Heading": "Genearte Summarised Article Heading",
         "Summary": ["", "", "", "", ""]
     }
   }`;
@@ -168,15 +168,18 @@ const optimizeExplainerSeo = async (
       jsonResponseStart,
       jsonResponseEnd + 1
     );
-    console.log(jsonString);
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
     
+    console.log(resultText);
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5");
+
     const jsonResponse = JSON.parse(jsonString);
 
-    jsonResponse["Sub Headings (H2, H3)"] = jsonResponse[
-      "Sub Headings (H2, H3)"
-    ]
-      .replace(/## /g, "") // Remove '## ' symbols
-      .replace(/\n/g, ""); // Remove new line characters
+    // jsonResponse["Sub Headings (H2, H3)"] = jsonResponse[
+    //   "Sub Headings (H2, H3)"
+    // ]
+    //   .replace(/## /g, "") // Remove '## ' symbols
+    //   .replace(/\n/g, ""); // Remove new line characters
 
     return jsonResponse; // Return the JSON object
   } catch (error) {
