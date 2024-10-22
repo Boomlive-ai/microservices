@@ -64,8 +64,8 @@ const optimizeFactcheckSeo = async (
     "Tags": "",
     "Meta Title": "",
     "Meta Description": "",
-    "Sub Headings (H2)": "",
-    "Sub Headings (H3)": "",
+    "Sub Headings (H2)": ["", "","",""],
+    "Sub Headings (H3)": ["","","",""],
     "Keywords (Short and Long Tail)": "",
     "ClaimReview Schema": {
         "Claim": "",
@@ -92,7 +92,7 @@ const optimizeFactcheckSeo = async (
       messages: [{ role: "user", content: prompt }],
     });
     const resultText = result.choices[0].message.content;
-    //console.log(resultText); // For debugging
+    console.log(resultText); // For debugging
 
     const jsonResponseStart = resultText.indexOf("{");
     const jsonResponseEnd = resultText.lastIndexOf("}");
@@ -145,8 +145,8 @@ const optimizeExplainerSeo = async (
     "Tags": "",
     "Meta Title": "",
     "Meta Description": "",
-    "Sub Headings (H2)": "",
-    "Sub Headings (H3)": "",
+    "Sub Headings (H2)": ["", "","",""],
+    "Sub Headings (H3)": ["","","",""],
     "Keywords (Short and Long Tail)": "",
     "Article Summary Block": {
         "Heading": "Genearte Summarised Article Heading",
