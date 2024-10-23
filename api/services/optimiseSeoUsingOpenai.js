@@ -57,13 +57,12 @@ const optimizeFactcheckSeo = async (
   Provide the following parameters in JSON format based on the article analysis:
   
   {
-    "Title": "",
-    "Description": "",
-    "Suggested URL": "",
-    "Keyword": "",
-    "Tags": "",
-    "Meta Title": "",
-    "Meta Description": "",
+    "Title": ["Title1 should be in 60-70 characters to fit when seen on google search","Title2 should be in 60-70 characters to fit when seen on google search", "Title3 should be in 60-70 characters to fit when seen on google search"]
+    "Description": ["Description1 should be more like a statement", "Description2 should be more like a statement","Description3 should be more like a statement"],
+    "Suggested URL": "The suggested url include the main keywords provided",
+    "Tags": "Tags should be very specific based on more search volume and less competition **below 40**",
+    "Meta Title": "The meta title should include keywords",
+    "Meta Description": "Meta Description hould describe what boom analysed from the article. For Eg: Boom Analysed this video shows false information about the claim",
     "Sub Headings (H2)": ["", "","",""],
     "Sub Headings (H3)": ["","","",""],
     "Keywords (Short and Long Tail)": "",
@@ -138,13 +137,12 @@ const optimizeExplainerSeo = async (
   Provide the following parameters in JSON format based on the article analysis:
   
   {
-    "Title": "",
-    "Description": "",
-    "Suggested URL": "",
-    "Keyword": "",
-    "Tags": "",
-    "Meta Title": "",
-    "Meta Description": "",
+    "Title": ["Title1 should be in 60-70 characters to fit when seen on google search","Title2 should be in 60-70 characters to fit when seen on google search", "Title3 should be in 60-70 characters to fit when seen on google search"]
+    "Description": ["Description1 should be more like a statement", "Description2 should be more like a statement","Description3 should be more like a statement"],
+    "Suggested URL": "The suggested url include the main keywords provided",
+    "Tags": "Tags should be very specific based on more search volume and less competition **below 40**",
+    "Meta Title": "The meta title should include keywords",
+    "Meta Description": "Meta Description should describe what boom analysed from the article.It should start with what boom performed actions on article For Eg: Boom Analysed this video shows false information about the claim",
     "Sub Headings (H2)": ["", "","",""],
     "Sub Headings (H3)": ["","","",""],
     "Keywords (Short and Long Tail)": "",
