@@ -68,7 +68,7 @@ const optimizeFactcheckSeo = async (
     "Keywords (Short and Long Tail)": "Suggest meta keywords both short and long-tail that users may search for the stories",
     "ClaimReview Schema": {
         "Claim": "",
-        "Fact-Check": ""
+        "Fact-Check": "True or False"
     },
     "Factcheck Summary": {
         "Claim": "",
