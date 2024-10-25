@@ -17,7 +17,7 @@ const determineArticleType = async (content) => {
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // gpt-3.5-turbo or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
+      model: "gpt-4o", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
       messages: [{ role: "user", content: prompt }],
       max_tokens: 2000,
       temperature: 0.5,
@@ -87,7 +87,7 @@ const optimizeFactcheckSeo = async (
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Use the desired OpenAI model // gpt-4o  or // gpt-3.5-turbo
+      model: "gpt-4o", // Use the desired OpenAI model // gpt-4o  or // gpt-4o
       max_tokens: 4096,
       temperature: 0.5,
       messages: [{ role: "user", content: prompt }],
@@ -151,7 +151,7 @@ const optimizeFactcheckSeo = async (
 
 //   try {
 //     const result = await openai.chat.completions.create({
-//       model: "gpt-4", // Use the desired OpenAI model // gpt-3.5-turbo // gpt-4
+//       model: "gpt-4", // Use the desired OpenAI model // gpt-4o // gpt-4
 //       messages: [{ role: "user", content: prompt }],
 //       max_tokens: 4096,
 //       temperature: 0.5,
@@ -220,7 +220,7 @@ const optimizeExplainerSeo = async (
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Specify the desired OpenAI model // gpt-4
+      model: "gpt-4o", // Specify the desired OpenAI model // gpt-4
       messages: [{ role: "user", content: prompt }],
       max_tokens: 4096,
       temperature: 0.5,
