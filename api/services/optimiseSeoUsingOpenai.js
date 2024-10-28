@@ -57,9 +57,9 @@ const optimizeFactcheckSeo = async (
     "Title3: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**"
   ],
     "Description": [
-      "Description1: A clear, concise statement description in breif summarizing the article.",
-      "Description2: A clear, concise statement description in breif summarizing the article.",
-      "Description3: A clear, concise statement description in breif summarizing the article."
+      "Description1: A clear, concise statement like description in breif summarizing the article, it should be like a paragraph.",
+      "Description2: A clear, concise statement like description in breif summarizing the article, it should be like a paragraph.",
+      "Description3: A clear, concise statement like description in breif summarizing the article, it should be like a paragraph."
     ],
     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url.",
     "Tags": "Provide minimum atleast 20 specific tags with high search volume and low competition (ideally under 40). Avoid generic or broad terms, such as 'Privacy Concerns' or 'Unwanted Calls.' Ensure the tags are niche-focused, directly relevant to the article content, and align with the tone of boomlive.in.  Eg. tag1, tag2,...,tagn",
@@ -67,7 +67,7 @@ const optimizeFactcheckSeo = async (
     "Meta Description": "A summary of the article's analysis, starting with actions taken, e.g., 'Boom analyzed this article to clarify false claims.'",
     "Sub Headings (H2)": [Subheadings ( H2 & H3 ) should be seo firendly and suitable google snippets Eg: "", "","",..,""],
     "Sub Headings (H3)": [ Subheadings ( H2 & H3 ) should be seo firendly and suitable google snippets Eg: "","","",..,""],
-    "Keywords (Short and Long Tail)": "Suggest meta keywords both short and long-tail that users may search for the stories. Eg. keyword1, keyword2,...,keywordn",
+    "Keywords (Short and Long Tail)": "Suggest meta keywords both short and long-tail that users may search for the stories   with high search volume and low competition. Eg. keyword1, keyword2,...,keywordn",
     "ClaimReview Schema": {
         "Claim": "Mention the complete claim mentioned in the article",
         "Fact-Check": "True or False"
@@ -206,9 +206,9 @@ const optimizeExplainerSeo = async (
     "Title3: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**"
   ],
     "Description": [
-      "Description1: A clear, concise statement description in breif summarizing the article.",
-      "Description2: A clear, concise statement description in breif summarizing the article.",
-      "Description3: A clear, concise statement description in breif summarizing the article."
+      "Description1: A clear, concise statement like description in breif summarizing the article, it should be like a paragraph.",
+      "Description2: A clear, concise statement like description in breif summarizing the article, it should be like a paragraph.",
+      "Description3: A clear, concise statement like description in breif summarizing the article, it should be like a paragraph."
     ],
     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url.",
     "Tags": "Provide minimum atleast 20 specific tags with high search volume and low competition (ideally under 40). Avoid generic or broad terms, such as 'Privacy Concerns' or 'Unwanted Calls.' Ensure the tags are niche-focused, directly relevant to the article content, and align with the tone of boomlive.in.  Eg. tag1, tag2,...,tagn",
