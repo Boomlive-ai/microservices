@@ -52,7 +52,31 @@ app.post("/api/optimize-seo", async (req, res) => {
   }
 });
 
+// Analayze entiment
+
 app.post("/api/sentiment", extractSentimentFromNews );
+
+
+// Download drive file
+
+app.get('/download-file', async (req, res) => {
+  const { fileId } = req.query; // Get the fileId from the query parameter
+  const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+  try {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    res.set({
+      'Content-Disposition': 'attachment; filename="file.csv"', // Set a file name or use dynamic name based on your needs
+      'Content-Type': response.headers['content-type'],
+    });
+    console.log(response.data);
+    
+    res.send(response.data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch file from Google Drive' });
+  }
+});
+
 
 
 // A fallback route to handle any other GET requests
