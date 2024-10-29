@@ -200,6 +200,7 @@ const optimizeFactcheckSeo = async (
     Example Structure: 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', '[specific person or region]' combined with ‘viral claim’ or ‘false claim’ phrasing.
 
     Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.",
+    "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
     "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
