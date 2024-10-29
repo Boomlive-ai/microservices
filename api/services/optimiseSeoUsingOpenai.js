@@ -198,8 +198,9 @@ const optimizeFactcheckSeo = async (
     Capture Related Trends in Fact-Checking and Misinformation: Use tags that reflect current trends or common terms within fact-checking and political misinformation, creating relevance for readers interested in these themes.
 
     Example Structure: 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', '[specific person or region]' combined with ‘viral claim’ or ‘false claim’ phrasing.
-
-    Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.",
+  
+    Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.
+    Format: Provide in a comma-separated list.",
     "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
     "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
@@ -409,7 +410,8 @@ const optimizeExplainerSeo = async (
 
         Example Structure: 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', '[specific person or region]' combined with ‘viral claim’ or ‘false claim’ phrasing.
 
-        Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.",
+        Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.
+        Format: Provide in a comma-separated list.",
     "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
     "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
