@@ -6,6 +6,7 @@ const { optimizeSeoUsingOpenAI} = require("./api/services/optimiseSeoUsingOpenai
 const {  extractSentimentFromNews } = require("./api/services/analyzeNews"); // Import the summarizeNews function
 const fileUpload = require('express-fileupload');
 const app = express();
+const axios = require("axios");
 
 // Define allowed origins, including localhost on any port
 const allowedOrigins = ['https://analyzesentiment.vercel.app','https://news-article-summarizer.vercel.app','https://nas-lovat.vercel.app','https://www.axionmatrix.com','https://axionmatrix.vercel.app','https://ims-api-beige.vercel.app', /^http:\/\/localhost:\d+$/];
@@ -59,6 +60,7 @@ app.post("/api/sentiment", extractSentimentFromNews );
 
 // Download drive file
 
+
 app.get('/download-file', async (req, res) => {
   const { fileId } = req.query; // Get the fileId from the query parameter
   const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
@@ -69,15 +71,14 @@ app.get('/download-file', async (req, res) => {
       'Content-Disposition': 'attachment; filename="file.csv"', // Set a file name or use dynamic name based on your needs
       'Content-Type': response.headers['content-type'],
     });
-    console.log(response.data);
+    console.log(response.data); // Log the response data for debugging
     
     res.send(response.data);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch file from Google Drive' });
+    console.error('Error fetching file from Google Drive:', error); // Log the error
+    res.status(500).json({ error: 'Failed to fetch file from Google Drive', details: error.message });
   }
 });
-
-
 
 // A fallback route to handle any other GET requests
 app.get('*', (req, res) => {
