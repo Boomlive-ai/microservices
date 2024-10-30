@@ -17,13 +17,13 @@ const determineArticleType = async (content) => {
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-4o", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
+      model: "gpt-3.5-turbo", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
       messages: [{ role: "user", content: prompt }],
       max_tokens: 2000,
-      temperature: 0.5,
+      temperature: 0.3,
     });
     const resultText = result.choices[0].message.content;
-    console.log(resultText); // Log the result for debugging purposes
+    console.log("resultText",resultText); // Log the result for debugging purposes
 
     const parsedResponse = resultText.toLowerCase().includes("factcheck")
       ? "factcheck"
@@ -126,7 +126,7 @@ const optimizeFactcheckSeo = async (
   headline = null,
   description = null
 ) => {
-  console.log("Optimizing content to closely mirror Boomlive style and SEO guidelines");
+  console.log("It Is a Fact Check Content");
 
   const prompt = `
   You are an SEO and content expert skilled in fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
@@ -347,7 +347,7 @@ const optimizeExplainerSeo = async (
 ) => {
   console.log("IT IS EXPLAINER CONTENT");
 
-  const prompt = ` You are an SEO and content expert skilled in fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
+  const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
   **Examples of Boomlive Titles**:
   - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
@@ -361,9 +361,11 @@ const optimizeExplainerSeo = async (
   - "How AI Images Fueled Pet-Eating Rumours About US Immigrants"
   - "Ayushman Bharat To Cover All Citizens Over 70: How Will The Scheme Work?"
   - "Australia Plans To Ban Social Media For Kids: Is It The Solution?"
+
   **Examples of Boomlive Descriptions**:
-  - "BOOM found that the visuals have been overlaid with an AI-generated voice clone to falsely claim the death of Dr. Bimal Chhajer."
-  - "BOOM found that the original video shows Thackeray criticising the BJP and referring to Union Minister Kiren Rijiju's 2015 statement on eating beef, which has been cropped out."
+  - "Character.AI has previously made headlines for its AI personas. Recently, a US resident found a chatbot created in the likeness of his daughter, who was murdered in 2006, on the platform."
+  - "Israel has described the death of 61-year-old Sinwar as one of the most significant strikes against Hamas since the war began following the group's attacks on October 7, 2023."
+  - "Hundreds of pagers used by members of the armed group Hezbollah exploded across Lebanon on Tuesday, killing several people."
  
    **Examples of Boomlive Subheadings for Google Snippets and Search Optimization**:
   - "What Does the Viral Video Claim About Uddhav Thackeray?"
@@ -381,14 +383,9 @@ const optimizeExplainerSeo = async (
   - Emphasize contextual relevance, accuracy, and the importance of debunking misinformation.
   - Maintain a neutral yet slightly urgent tone, encouraging readers to understand the implications of misinformation.
   - Integrate emotional triggers or strong verbs to enhance engagement.
-  
-  **Description Guidelines**:
-  - Begin each description with "BOOM found that..." to establish authority and context.
-  - Clearly summarize the findings while maintaining the structure and tone of the provided examples.
-  - Keep descriptions concise, ideally around 20-30 words, focusing on what has been misrepresented in the original claim.
-  
+    
   **Engagement Factors**:
-  - Write content that is captivating and encourages the reader to understand the claim's context and the fact-check process.
+  - Write content that is captivating and encourages the reader to understand the claim's context and the explainor process.
   - Include calls to action or questions that provoke thought, akin to Boomlive’s engaging approach.
   
   **Citing Sources**:
@@ -406,38 +403,38 @@ const optimizeExplainerSeo = async (
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
     ],
     "Description": [
-      "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each), starting with 'BOOM found that...' to clarify the claim’s context or finding."
+      "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each),refer examples above of description to clarify the claim’s context or finding."
     ],
     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url, formatted with hyphens and reflecting Boomlive’s style.",
     "Tags":"Generate a set of 5-7 highly specific, SEO-optimized tags that reflect core aspects of the article and align with Boomlive’s factual tone and audience. Each tag should:
 
-        Target User Search Intent: Aim for terms users might search when fact-checking or exploring political misinformation, with an emphasis on high-relevance keywords for Middle East politics, misinformation verification, and viral content analysis.
+        Target User Search Intent: Aim for terms users might search when explainor, with an emphasis on high-relevance keywords for Middle East politics, misinformation verification, and viral content analysis.
 
         Prioritize Low-Competition, High-Volume Keywords: Focus on keywords and phrases with higher search volume but moderate-to-low competition, optimizing for visibility in search engines.
 
         Include Specific People, Regions, and Topics: Highlight distinct details such as key figures, geographic regions, and the viral misinformation context, avoiding generic tags.
 
-        Capture Related Trends in Fact-Checking and Misinformation: Use tags that reflect current trends or common terms within fact-checking and political misinformation, creating relevance for readers interested in these themes.
+        Capture Related Trends in explainor: Use tags that reflect current trends or common terms within explainor, creating relevance for readers interested in these themes.
 
         Example Structure: 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', '[specific person or region]' combined with ‘viral claim’ or ‘false claim’ phrasing.
 
-        Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.
+        Avoid general terms, crafting each tag with precision for relevance to Boomlive’s explainor approach and the article’s specific misinformation claim.
         Format: Provide in a comma-separated list.",
     "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
-    "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
+    "Meta Description": "Provide a meta description under 155 characters summarizing the explainor analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
   "Keywords (Short Tail)": "Generate a list of 5-7 highly specific, SEO-optimized short-tail keywords related to the article's topic. The keywords should:
 
 Focus on Unique Aspects: Identify distinctive terms that accurately reflect the main themes or subjects of the article, ensuring they capture niche topics rather than generic terms.
-Incorporate Relevant Context: Include keywords that are particularly relevant to the nuances of fact-checking or explanatory content, avoiding overly broad or commonly used phrases.
+Incorporate Relevant Context: Include keywords that are particularly relevant to the nuances of explainor or explanatory content, avoiding overly broad or commonly used phrases.
 Prioritize Search Volume and Competition: Choose keywords with high search volume that also have lower competition, enhancing the potential for visibility and engagement.
 Format: Provide in a comma-separated list.",
     "Keywords (Long Tail)": "Generate a list of 5-7 detailed, SEO-optimized long-tail keywords that address specific queries related to the article’s topic. Each keyword should:
 
 Capture Specific User Intent: Phrase keywords to align with unique user inquiries relevant to the article, ensuring they go beyond generic phrases and address particular concerns or interests.
 Highlight Niche Relevance: Focus on keywords that speak to particular details of the topic, such as recent events, lesser-known facts, or specific angles, avoiding broad keywords that lack specificity.
-Match the Article Type: Tailor keywords to resonate with the content style—either fact-checking or explanatory—emphasizing clarity and informative nature without using common or vague language.
+Match the Article Type: Tailor keywords to resonate with the content style—either explainor or explanatory—emphasizing clarity and informative nature without using common or vague language.
 Format: Provide in a comma-separated list.",
     "Article Summary Block": {
           "Heading": "A concise, SEO-optimized heading summarizing the article.",
