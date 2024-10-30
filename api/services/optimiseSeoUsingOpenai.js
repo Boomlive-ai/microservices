@@ -131,11 +131,17 @@ const optimizeFactcheckSeo = async (
   const prompt = `
   You are an SEO and content expert skilled in fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
-  **Examples of Boomlive Titles**:
+**Examples of Boomlive Titles**:
   - "No, Uddhav Thackeray Did Not Admit To Eating Beef; Cropped Video Viral"
   - "Old Video Of Saudi Blogger Calling Netanyahu Viral With False Claims"
   - "Posts Falsely Claim PM Modi Excluded From BRICS 2024 Leaders’ Photo"
   - "Viral Claim Of Kharge Left Out At Priyanka Gandhi’s Wayanad Nomination Is Misleading"
+  -  "Did Nana Patole Say Rahul Gandhi & Congress Would Scrap Reservations? A Fact Check"
+  - "OpIndia Falsely Claims LiveLaw Misreported Sharjeel Imam Matters In SC"
+  - "Old Video of Salman Khan Peddled As Threat Against Gangster Lawrence Bishnoi"
+  - "Video Of Electric Wire Short Circuiting In Flooded Road Is Not From Bengaluru"
+  - "Video Of Andhra Pradesh Temple Vandalism Viral With False Communal Claim"
+  - "Fake Lokmat Graphic Claims Nana Patole Set To Resign From Congress"
 
 
   **Examples of Boomlive Descriptions**:
@@ -344,12 +350,17 @@ const optimizeExplainerSeo = async (
   const prompt = ` You are an SEO and content expert skilled in fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
   **Examples of Boomlive Titles**:
-  - "No, Uddhav Thackeray Did Not Admit To Eating Beef; Cropped Video Viral"
-  - "Old Video Of Saudi Blogger Calling Netanyahu Viral With False Claims"
-  - "Posts Falsely Claim PM Modi Excluded From BRICS 2024 Leaders’ Photo"
-  - "Viral Claim Of Kharge Left Out At Priyanka Gandhi’s Wayanad Nomination Is Misleading"
-
-
+  - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
+  - "An AI Chatbot Is Being Blamed For A Teenager’s Suicide"
+  - "What Does Hamas Leader Yahya Sinwar's Death Mean For The Ongoing War?"
+  - "Reels to Rallies: New Report Reveals Influencers as Key Players in Political Narratives"
+  - "Explained: Who Exposed Data Of 3 Crore Star Health Customers?"
+  - "Why Are Experts Concerned About Airtel's New AI Spam Tool?"
+  - "Indian News Channels Give Communal Hue To Gruesome Bengaluru Murder"
+  - "Pager Attack On Hezbollah Is An Example Of A Booby Trap: What Does It Mean?"
+  - "How AI Images Fueled Pet-Eating Rumours About US Immigrants"
+  - "Ayushman Bharat To Cover All Citizens Over 70: How Will The Scheme Work?"
+  - "Australia Plans To Ban Social Media For Kids: Is It The Solution?"
   **Examples of Boomlive Descriptions**:
   - "BOOM found that the visuals have been overlaid with an AI-generated voice clone to falsely claim the death of Dr. Bimal Chhajer."
   - "BOOM found that the original video shows Thackeray criticising the BJP and referring to Union Minister Kiren Rijiju's 2015 statement on eating beef, which has been cropped out."
