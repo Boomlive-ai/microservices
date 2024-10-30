@@ -11,8 +11,8 @@ const openai = new OpenAI({
 
 // Function to determine article type using OpenAI
 const determineArticleType = async (content) => {
-  const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer". If the article discusses a claim and its verification, categorize it as "factcheck". Otherwise, categorize it as "explainer". 
-  
+  // const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer". If the article discusses a claim and its verification, categorize it as "factcheck". Otherwise, categorize it as "explainer". 
+    const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer".
     Article content: ${content}`;
 
   try {
