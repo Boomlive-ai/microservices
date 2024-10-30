@@ -421,7 +421,7 @@ const optimizeExplainerSeo = async (
         Avoid general terms, crafting each tag with precision for relevance to Boomlive’s explainor approach and the article’s specific misinformation claim.
         Format: Provide in a comma-separated list.",
     "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
-    "Meta Description": "Provide a meta description under 155 characters summarizing the explainor analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
+    "Meta Description": "Provide a meta description under 155 characters summarizing the explainor analysis in Boomlive’s style",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
   "Keywords (Short Tail)": "Generate a list of 5-7 highly specific, SEO-optimized short-tail keywords related to the article's topic. The keywords should:
