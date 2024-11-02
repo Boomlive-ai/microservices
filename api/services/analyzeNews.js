@@ -3,6 +3,7 @@ const axios = require("axios");
 const { load } = require("cheerio");
 const { OpenAI } = require("openai"); // Import OpenAI
 const { GoogleGenerativeAI } = require("@google/generative-ai"); // Importing the Google Generative AI library
+const {  generateIntentForArticle } = require("../services/analyzeIntent"); // Import the summarizeNews function
 
 require("dotenv").config();
 
@@ -197,8 +198,10 @@ const extractSentimentFromNews = async (req, res) => {
     );
 
     const sentiment = await analyzeSentiment(articleText);
+    const intent = await generateIntentForArticle(articleText);
 
-    res.status(200).json({ sentiment }); // Send back the sentiment analysis
+    console.log(intent);
+    res.status(200).json({ sentiment, intent }); // Send back the sentiment analysis
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -226,6 +229,7 @@ const summarizeNews = async (req, res) => {
 
     const reliability = await checkSourceReliability(articleText);
 
+    
     // Summarize the article text using the Google Generative AI
     const summary = await summarizeArticle(articleText);
     res.status(200).json({ summary, reliability }); // Send back the sentiment analysis
