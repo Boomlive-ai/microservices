@@ -12,15 +12,15 @@ const openai = new OpenAI({
 // Function to determine article type using OpenAI
 const determineArticleType = async (content) => {
   // const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer". If the article discusses a claim and its verification, categorize it as "factcheck". Otherwise, categorize it as "explainer". 
-    const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer".
+    const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer in just one word".
     Article content: ${content}`;
 
   try {
     const result = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
+      model: "gpt-4o", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
       messages: [{ role: "user", content: prompt }],
       max_tokens: 2000,
-      temperature: 0.3,
+      temperature: 0.7,
     });
     const resultText = result.choices[0].message.content;
     console.log("resultText",resultText); // Log the result for debugging purposes
@@ -155,8 +155,10 @@ const optimizeFactcheckSeo = async (
   - "Why Is This Video Going Viral Before Maharashtra Elections?"
   - "The Role of Kiren Rijiju’s 2015 Comment in Thackeray’s Speech"
   - "Conclusion: Misleading Edits Distort Uddhav Thackeray’s Statements"
-  
-  **Article Content**: ${articleText}
+
+  **Article Headline**: ${headline}
+  **Article Description**: ${description}
+  **Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)**: ${articleText}
   
   **Writing Style Characteristics**:
   - Use straightforward, clear language without jargon.
@@ -166,7 +168,7 @@ const optimizeFactcheckSeo = async (
   - Integrate emotional triggers or strong verbs to enhance engagement.
   
   **Description Guidelines**:
-  - Begin each description with "BOOM found that..." to establish authority and context.
+  - Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)**. Begin each description with "BOOM found that..." to establish authority and context and it can be in english, hindi and bangla.
   - Clearly summarize the findings while maintaining the structure and tone of the provided examples.
   - Keep descriptions concise, ideally around 20-30 words, focusing on what has been misrepresented in the original claim.
   
@@ -183,14 +185,14 @@ const optimizeFactcheckSeo = async (
   **Schema Definitions**:
   - Provide explanations of ClaimReview schema importance in improving visibility and credibility.
   
-  Respond with the JSON format specified:
+  Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)** and Respond with the JSON format:
   
   {
     "Title": [
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
     ],
     "Description": [
-      "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each), starting with 'BOOM found that...' to clarify the claim’s context or finding."
+      "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each), starting with 'BOOM found that...', 'बूम ने पाया...', 'বুম যে পাওয়া গেছে...'(in language in which content is provided) to clarify the claim’s context or finding. "
     ],
     "Suggested URL": "Suggest a URL directly relevant to the article, formatted with hyphens and reflecting Boomlive’s style.",
     "Tags":"Generate a set of 5-7 highly specific, SEO-optimized tags that reflect core aspects of the article and align with Boomlive’s factual tone and audience. Each tag should:
@@ -208,7 +210,7 @@ const optimizeFactcheckSeo = async (
     Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.
     Format: Provide in a comma-separated list.",
     "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
-    "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style, e.g., 'BOOM clarifies misleading claim.'",
+    "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style in  and it can be in english, hindi and bangla, e.g., 'BOOM clarifies misleading claim.', 'বুম বিভ্রান্তিকর দাবি স্পষ্ট করে।', 'बूम ने भ्रामक दावे पर स्पष्टीकरण दिया।''",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
     "Keywords (Short Tail)": "Generate a list of 5-7 highly specific, SEO-optimized short-tail keywords related to the article's topic. The keywords should:
@@ -242,7 +244,7 @@ Format: Provide in a comma-separated list.",
     ]
   }
   
-  Only provide the output in JSON format as specified, without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
+  Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
   `;
   
   
@@ -347,7 +349,7 @@ const optimizeExplainerSeo = async (
 ) => {
   console.log("IT IS EXPLAINER CONTENT");
 
-  const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
+  const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in language in which article is written(English, Hindi, Bangla).
   
   **Examples of Boomlive Titles**:
   - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
@@ -375,7 +377,9 @@ const optimizeExplainerSeo = async (
   - "The Role of Kiren Rijiju’s 2015 Comment in Thackeray’s Speech"
   - "Conclusion: Misleading Edits Distort Uddhav Thackeray’s Statements"
   
-  **Article Content**: ${articleText}
+  **Article Headline**: ${headline}
+  **Article Description**: ${description}
+   **Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)**: ${articleText}
   
   **Writing Style Characteristics**:
   - Use straightforward, clear language without jargon.
@@ -397,7 +401,7 @@ const optimizeExplainerSeo = async (
   **Schema Definitions**:
   - Provide explanations of ClaimReview schema importance in improving visibility and credibility.
   
-  Respond with the JSON format specified:
+  Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)** and Respond with the JSON format:
   {
     "Title": [
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
@@ -406,7 +410,7 @@ const optimizeExplainerSeo = async (
       "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each),refer examples above of description to clarify the claim’s context or finding."
     ],
     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url, formatted with hyphens and reflecting Boomlive’s style.",
-    "Tags":"Generate a set of 5-7 highly specific, SEO-optimized tags that reflect core aspects of the article and align with Boomlive’s factual tone and audience. Each tag should:
+    "Tags":"Generate a set of 5-7 highly specific, SEO-optimized tags that reflect core aspects of the article and align with Boomlive’s explainor tone and audience. Each tag should:
 
         Target User Search Intent: Aim for terms users might search when explainor, with an emphasis on high-relevance keywords for Middle East politics, misinformation verification, and viral content analysis.
 
@@ -440,7 +444,10 @@ Format: Provide in a comma-separated list.",
           "Heading": "A concise, SEO-optimized heading summarizing the article.",
           "Summary": ["Provide a 5-point summary capturing key points in Boomlive's clear style, with each point in one sentence."]
         },
-  }`;
+  }
+        
+  Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which content is written orignally (English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
+  `;
 
   try {
     const result = await openai.chat.completions.create({
@@ -471,16 +478,16 @@ Format: Provide in a comma-separated list.",
 
 // Main function to optimize SEO based on article type
 const optimizeSeoUsingOpenAI = async (reqBody) => {
-  const { headline, description, articleText } = reqBody;
+  const { headline, description, articleText, articleType } = reqBody;
 
   if (!articleText) {
     throw new Error("Article content is mandatory.");
   }
 
-  const articleType = await determineArticleType(articleText);
+  // const articleType = await determineArticleType(articleText);
   console.log(articleType);
 
-  if (articleType === "factcheck") {
+  if (articleType == "factcheck") {
     return await optimizeFactcheckSeo(articleText, headline, description);
   } else {
     return await optimizeExplainerSeo(articleText, headline, description);

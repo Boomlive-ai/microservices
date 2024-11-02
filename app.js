@@ -39,14 +39,14 @@ app.use(express.json());
 
 // SEO optimization route
 app.post("/api/optimize-seo", async (req, res) => {
-  const { headline, description, articleText } = req.body; // Expecting headline, description, and article text in the request body
+  const { headline, description, articleText, articleType } = req.body; // Expecting headline, description, and article text in the request body
 
   if (!articleText) {
     return res.status(400).json({ error: "Article text is required" });
   }
 
   try {
-    const optimizationResults = await optimizeSeoUsingOpenAI({ headline, description, articleText });
+    const optimizationResults = await optimizeSeoUsingOpenAI({ headline, description, articleText, articleType });
     res.status(200).json(optimizationResults); // Send back the SEO optimization results
   } catch (error) {
     res.status(500).json({ error: error.message });
