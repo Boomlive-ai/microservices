@@ -127,7 +127,14 @@ const optimizeFactcheckSeo = async (
   description = null
 ) => {
   console.log("It Is a Fact Check Content");
+  const detectLanguage = (text) => {
+    if (/[अ-ह]+/.test(text)) return "Hindi";
+    if (/[অ-হ]+/.test(text)) return "Bangla";
+    return "English";
+  };
 
+  const language = detectLanguage(articleText);
+  console.log(language);
   const prompt = `
   You are an SEO and content expert skilled in fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
@@ -158,7 +165,7 @@ const optimizeFactcheckSeo = async (
 
   **Article Headline**: ${headline}
   **Article Description**: ${description}
-  **Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)**: ${articleText}
+  **Understand the language in which article content is and provide *all* content in the ${language} language(Eg:- English, Hindi, Bangla)**: ${articleText}
   
   **Writing Style Characteristics**:
   - Use straightforward, clear language without jargon.
@@ -185,6 +192,12 @@ const optimizeFactcheckSeo = async (
   **Schema Definitions**:
   - Provide explanations of ClaimReview schema importance in improving visibility and credibility.
   
+  **Writing Style Characteristics**:
+  - Use ${language === 'Hindi' ? 'Hinglish (Hindi and English mix)' : language === 'Bangla' ? 'Bangla-English' : 'English'} depending on article content language.
+  - Use straightforward, clear language without jargon.
+  - Maintain a neutral yet slightly urgent tone, encouraging readers to understand the implications of misinformation.
+
+
   Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)** and Respond with the JSON format:
   
   {
@@ -209,24 +222,24 @@ const optimizeFactcheckSeo = async (
   
     Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.
     Format: Provide in a comma-separated list.",
-    "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
-    "Meta Description": "Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style in  and it can be in english, hindi and bangla, e.g., 'BOOM clarifies misleading claim.', 'বুম বিভ্রান্তিকর দাবি স্পষ্ট করে।', 'बूम ने भ्रामक दावे पर स्पष्टीकरण दिया।''",
+    "Meta Title": "Use Hinglish(Eg:"पूर्व प्रधानमंत्री इंदिरा गांधी Seafood खा रही हैं", "कुंभकर्ण की तलवार के दावे से AI जनरेटेड तस्वीरें वायरल", "BJP दिल्ली ने ऑटो रिक्शा की एडिटेड फोटो शेयर कर केजरीवाल पर कसा तंज", "जानिए क्या है डिजिटल पेमेंट सॉल्यूशन e-RUPI?") or combination of English and Bangla language if article content is in Hindi or Bangla and Provide a meta title under 60 characters using primary keywords.",
+    "Meta Description": "Use Hinglish words or combination of English and Bangla language if article content is in Hindi or Bangla and Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style in  and it can be in english, hindi and bangla, e.g., 'BOOM clarifies misleading claim.', 'বুম বিভ্রান্তিকর দাবি স্পষ্ট করে।', 'बूम ने भ्रामक दावे पर स्पष्टीकरण दिया।''",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
-    "Keywords (Short Tail)": "Generate a list of 5-7 highly specific, SEO-optimized short-tail keywords related to the article's topic. The keywords should:
+    "Keywords (Short Tail)": "Generate a list of ${language === 'Hindi' ? 'Hinglish (Hindi and English mix)' : language === 'Bangla' ? 'Bangla-English' : 'English'} 5-7 highly specific, SEO-optimized short-tail keywords related to the article's topic. The keywords should:
 
 Focus on Unique Aspects: Identify distinctive terms that accurately reflect the main themes or subjects of the article, ensuring they capture niche topics rather than generic terms.
 Incorporate Relevant Context: Include keywords that are particularly relevant to the nuances of fact-checking or explanatory content, avoiding overly broad or commonly used phrases.
 Prioritize Search Volume and Competition: Choose keywords with high search volume that also have lower competition, enhancing the potential for visibility and engagement.
 Format: Provide in a comma-separated list.",
-    "Keywords (Long Tail)": "Generate a list of 5-7 detailed, SEO-optimized long-tail keywords that address specific queries related to the article’s topic. Each keyword should:
+    "Keywords (Long Tail)": "Generate a list of ${language === 'Hindi' ? 'Hinglish (Hindi and English mix)' : language === 'Bangla' ? 'Bangla-English' : 'English'} 5-7 detailed, SEO-optimized long-tail keywords that address specific queries related to the article’s topic. Each keyword should:
 
 Capture Specific User Intent: Phrase keywords to align with unique user inquiries relevant to the article, ensuring they go beyond generic phrases and address particular concerns or interests.
 Highlight Niche Relevance: Focus on keywords that speak to particular details of the topic, such as recent events, lesser-known facts, or specific angles, avoiding broad keywords that lack specificity.
 Match the Article Type: Tailor keywords to resonate with the content style—either fact-checking or explanatory—emphasizing clarity and informative nature without using common or vague language.
 Format: Provide in a comma-separated list.",
     "ClaimReview Schema": {
-      "Claim": "State the full claim being fact-checked.",
+      "Claim": "State the full complete claim being fact-checked.",
       "Fact-Check": "Label the claim as 'True' or 'False' based on the fact-check."
     },
     "Factcheck Summary": {
@@ -244,7 +257,7 @@ Format: Provide in a comma-separated list.",
     ]
   }
   
-  Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
+  Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.**Note Meta Title, Meta Description, Keywords (Short Tail) and Keywords (Long Tail) should include English words which are searched by users with the language in ${language === 'Hindi' ? 'Hinglish (Hindi and English mix)' : language === 'Bangla' ? 'Bangla-English' : 'English'}**
   `;
   
   
@@ -399,7 +412,7 @@ const optimizeExplainerSeo = async (
   - Ensure the article follows a logical flow: start with a hook, provide context, detail the claim, and conclude with implications.
   
   **Schema Definitions**:
-  - Provide explanations of ClaimReview schema importance in improving visibility and credibility.
+  - Provide complrte explanations of ClaimReview schema importance in improving visibility and credibility.
   
   Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)** and Respond with the JSON format:
   {
