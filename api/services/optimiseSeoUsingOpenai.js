@@ -122,20 +122,17 @@ const determineArticleType = async (content) => {
 
 const optimizeFactcheckSeo = async (
   articleText,
+  articleLanguage,
   headline = null,
   description = null
 ) => {
   console.log("It Is a Fact Check Content");
-  const detectLanguage = (text) => {
-    if (/[अ-ह]+/.test(text)) return "Hindi";
-    if (/[অ-হ]+/.test(text)) return "Bangla";
-    return "English";
-  };
 
-  const language = detectLanguage(articleText);
+  const language = articleLanguage;
+  // const language = detectLanguage(articleText);
   console.log(language);
   const prompt = `
-  You are an SEO and content expert skilled in fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
+  You are an SEO and content expert skilled in ${language} fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
 **Examples of Boomlive Titles**:
   - "No, Uddhav Thackeray Did Not Admit To Eating Beef; Cropped Video Viral"
@@ -203,66 +200,82 @@ const optimizeFactcheckSeo = async (
   - Maintain a neutral yet slightly urgent tone, encouraging readers to understand the implications of misinformation.
 
 
-  Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)** and Respond with the JSON format:
+  Understand the language in which article content is and provide *all* content in the ${language} and Respond with the JSON format:
   
   {
     "Title": [
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
     ],
     "Description": [
-      "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each), starting with 'BOOM found that...', 'बूम ने पाया...', 'বুম যে পাওয়া গেছে...'(in language in which content is provided) to clarify the claim’s context or finding. "
+      "Provide 3 concise, SEO-optimized descriptions  in ${language} (160-180 characters each), starting with 'BOOM found that...' if article content is in English or 'बूम ने पाया...' if article content is in Hindi or  'বুম যে পাওয়া গেছে...' if article content is in Bangla  to clarify the claim’s context or finding. Consider article is in ${language}"
     ],
+
     "Suggested URL": "Suggest a URL directly relevant to the article, formatted with hyphens and reflecting Boomlive’s style.",
-    "Tags":"Generate a set of 5-7 highly specific, SEO-optimized tags that reflect core aspects of the article and align with Boomlive’s factual tone and audience. Each tag should:
 
-    Target User Search Intent: Aim for terms users might search when fact-checking or exploring political misinformation, with an emphasis on high-relevance keywords for Middle East politics, misinformation verification, and viral content analysis.
+    "Tags": "Generate 5-7 specific, SEO-optimized tags that reflect the core aspects of the article and align with Boomlive’s factual tone. Each tag should:
 
-    Prioritize Low-Competition, High-Volume Keywords: Focus on keywords and phrases with higher search volume but moderate-to-low competition, optimizing for visibility in search engines.
+    - **Target User Intent**: Focus on keywords users search for when fact-checking political misinformation, especially related to Middle East politics and viral content analysis.
+      
+    - **Prioritize Keywords**: Choose low-competition, high-volume keywords to enhance visibility in search engines.
+      
+    - **Highlight Specifics**: Include key figures, geographic regions, and the context of the misinformation, avoiding generic terms.
+      
+    - **Reflect Trends**: Capture common terms and current trends in fact-checking and misinformation relevant to the article.
 
-    Include Specific People, Regions, and Topics: Highlight distinct details such as key figures, geographic regions, and the viral misinformation context, avoiding generic tags.
+    - **Example Structure**: Use phrases like 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', or '[specific person/region] viral claim'.
 
-    Capture Related Trends in Fact-Checking and Misinformation: Use tags that reflect current trends or common terms within fact-checking and political misinformation, creating relevance for readers interested in these themes.
+    Provide the tags in a comma-separated list in ${language}.",
 
-    Example Structure: 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', '[specific person or region]' combined with ‘viral claim’ or ‘false claim’ phrasing.
-  
-    Avoid general terms, crafting each tag with precision for relevance to Boomlive’s fact-checking approach and the article’s specific misinformation claim.
-    Format: Provide in a comma-separated list ${language} language.",
-    
-    "Meta Title": "Use a meta title under 60 characters, combining primary keywords in English and the article's language. Examples include: ${language === 'Hindi' ? 'प्रधानमंत्री मोदी AI-Generated फोटो पर प्रतिक्रिया, COVID Vaccine पर मिथ্যাচার' : language === 'Bangla' ? "'Durga Puja নিয়ে Viral ভিডিও: সত্যি কি?', 'PM মোদী Fake News নিয়ে জানিয়েছেন গুরুত্বপূর্ণ তথ্য'" : 'Prime Minister Modi Responds to AI-Generated Photo, COVID Myths Explained'}. Provide a meta title under 60 characters using primary keywords.",
+    "Meta Title": "Create a meta title under 60 characters, combining primary keywords in both English and the article's language for Hindi or Bangla content, as users often search in a mix of languages. For example, ${
+      language === "Hindi"
+        ? "‘Prayagraj वायरल तस्वीर: BOOM ने बताई सच्चाई,’ ‘PM Modi और COVID Vaccine पर भ्रामक दावा’"
+        : language === "Bangla"
+        ? "‘Prayagraj ভাইরাল ছবি: আসল সত্য’, ‘PM মোদী ভুয়া খবর যাচাই’"
+        : "‘Prime Minister Modi Responds to Viral Image Claims,’ ‘Truth Behind Prayagraj Viral Photo’"
+    }. Ensure the title is clear, relevant, and uses primary keywords effectively for SEO."
 
-    "Meta Description": "Use Hinglish words or a combination of English and Bangla language if the article content is in Hindi or Bangla. Provide a meta description under 155 characters summarizing the fact-check analysis in Boomlive’s style, e.g., ${language === 'Hindi' ? 'BOOM ने भ्रामक दावे पर स्पष्टीकरण दिया।' : language === 'Bangla' ? 'বুম বিভ্রান্তিকর দাবি স্পষ্ট করে।' : 'BOOM clarifies misleading claim.'}. This summary should encapsulate the main findings."
-
-    
+    "Meta Description": "Create a meta description under 155 characters that summarizes the fact-check analysis in Boomlive’s style. For articles in Hindi or Bangla, use a combination of Hindi and English or Bangla and English words, as users often search in a mix of languages. For example, ${
+      language === "Hindi"
+        ? "‘BOOM ने भ्रामक दावे का सच बताया – Prayagraj में वायरल तस्वीर की हकीकत’"
+        : language === "Bangla"
+        ? "‘BOOM জানায় বিভ্রান্তিকর দাবির সত্যতা – Prayagraj ভাইরাল ছবির আসল সত্য’"
+        : "‘BOOM clarifies misleading claim – truth behind viral Prayagraj image’"
+    }. Ensure this summary captures the main findings in an SEO-friendly format."
 
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
-   "Keywords (Short Tail)": "Generate a list of ${
-     language === "Hindi"
-       ? "Hinglish keywords (e.g., fact-checking, khabar satya hai, news fact-checking, sachai jaanch, online khabar)"
-       : language === "Bangla"
-       ? "Bangla-English keywords (e.g., সত্যতা যাচাই, খবরের সত্যতা, সংবাদ যাচাই, তথ্যের সত্যতা, news fact-checking)"
-       : "English keywords (e.g., fact-checking, news verification, information accuracy, rumor check, online news)"
-   } including both English and the language keywords. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should:
 
-Focus on Unique Aspects: Identify distinctive terms that accurately reflect the main themes or subjects of the article, ensuring they capture niche topics rather than generic terms.
-Incorporate Relevant Context: Include keywords that are particularly relevant to the nuances of fact-checking or explanatory content, avoiding overly broad or commonly used phrases.
-Prioritize Search Volume and Competition: Choose keywords with high search volume that also have lower competition, enhancing the potential for visibility and engagement.
-Format: Provide in a comma-separated list.",
+    "Keywords (Short Tail)": "Generate a list of ${
+        language === 'Hindi'
+          ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims presented in the article. Include both Hindi and English terms. Examples include: 'मुख्य समाचार, हाल की घटनाएँ, तथ्य जांच, वायरल खबरें, सामाजिक मुद्दे', 'Main news, recent events, fact-checking, viral news, social issues'.'"
+          : language === 'Bangla'
+          ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages. Examples include: 'সাম্প্রদায়িক দাবি, তথ্যের সত্যতা, সাম্প্রতিক ঘটনা, আইনগত প্রসঙ্গ, সামাজিক প্রসঙ্গ', 'Communal claims, information accuracy, recent events, legal context, social issues'.'"
+          :" 'English keywords related to the article's main topics and claims. Examples include: 'current news, recent events, fact-checking, viral claims, social issues'.'"
+    }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should:
+
+    - **Focus on Contextual Terms**: Align with popular search terms relevant to the article's content and themes.
+    - **Incorporate Relevant Details**: Reflect unique aspects like specific events, claims, or significant details mentioned in the article.
+    - **Prioritize SEO for Search Volume and Competition**: Use keywords with high search volume and low competition for improved visibility and engagement.
+    - **Format**: Provide in a comma-separated list."
+
 
     "Keywords (Long Tail)": "Generate a list of ${
-      language === "Hindi"
-        ? "Hinglish (Hindi-English mix, e.g., khabar ki sachaai jaanch, sachai jaanne ke tarike, online khabron ki satyata, fact-checking kaise karein)"
-        : language === "Bangla"
-        ? "Bangla-English (mixed Bangla and English, e.g., খবরের সত্যতা যাচাই, নিউজ ভেরিফিকেশন টিপস, তথ্য যাচাইয়ের উপায়, কিভাবে খবর যাচাই করবেন)"
-        : "English long-tail keywords (e.g., how to verify news accuracy, steps for fact-checking online news, best practices for news verification, tips for identifying false news)"
-    } long-tail keywords, specifically targeting detailed user queries related to the article’s topic. Each keyword should:
+        language === 'Hindi'
+          ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords that target specific user queries and reflect unique aspects of the content. Examples include: 'हाल की घटनाओं की सच्चाई कैसे जांचें?, साम्प्रদायिक दावों की सत्यता कैसे जानें?, वायरल खबरों की जाँच के लिए कदम क्या हैं?', 'How to check the truth of recent events?, How to verify communal claims?, What are the steps to check viral news?'.'"
+          : language === 'Bangla'
+          ? "'Bangla, Banglish, and English long-tail keywords that address popular user inquiries related to the article. Include specific keywords that reflect unique content elements. Examples include: 'সাম্প্রদায়িক দাবির সত্যতা যাচাই করার উপায় কি?, সাম্প্রতিক ঘটনার প্রভাব নিয়ে আলোচনা, ভাইরাল খবর যাচাই করার টিপস কি?', 'How to verify the accuracy of communal claims?, Discussion on the impact of recent events, Tips for verifying viral news?'.'"
+          : "'English long-tail keywords that are highly searched and relate to the article’s main themes. Include specific keywords that target detailed user queries. Examples include: 'How to fact-check current news?, What are the legal implications of recent events?, Steps for verifying viral claims?.'"
+    }. Include 5-7 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should:
 
-Capture Specific User Intent: Phrase keywords to align with unique user inquiries relevant to the article, ensuring they go beyond generic phrases and address particular concerns or interests.
-Highlight Niche Relevance: Focus on keywords that speak to particular details of the topic, such as recent events, lesser-known facts, or specific angles, avoiding broad keywords that lack specificity.
-Match the Article Type: Tailor keywords to resonate with the content style—either fact-checking or explanatory—emphasizing clarity and informative nature without using common or vague language.
-Format: Provide in a comma-separated list.",
+    - **Capture Specific User Intent**: Craft keywords that directly address distinct user inquiries related to the article, ensuring they are tailored to answer specific questions or concerns.
+    - **Highlight Niche Relevance**: Focus on keywords that emphasize particular aspects of the topic, such as recent events, unique claims, or region-specific details, avoiding overly broad keywords.
+    - **Match the Article Type**: Align keywords with the content style—whether fact-checking or explanatory—ensuring clarity and informative value while avoiding vague or overused terms.
+    - **Prioritize Search Volume and Competition**: Choose keywords with high search volume to enhance visibility and engagement.
+    - **Format**: Provide in a comma-separated list."
+
+
     "ClaimReview Schema": {
-      "Claim": "State the full complete claim being fact-checked.",
+    "Claim": "Provide a comprehensive description of the entire claim being fact-checked, including any relevant context, specifics, and the source of the claim. For example, 'The viral post claims that images of a sword found in Sri Lanka are evidence of the character Kumbhkarna from the Ramayana, suggesting that it is a genuine historical artifact.'",
       "Fact-Check": "Label the claim as 'True' or 'False' based on the fact-check."
     },
     "Factcheck Summary": {
@@ -280,7 +293,7 @@ Format: Provide in a comma-separated list.",
     ]
   }
   
-  Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.**Note Meta Title, Meta Description, Keywords (Short Tail) and Keywords (Long Tail) should include English words which are searched by users with the language in ${
+  Only provide the output in the language in which article content is written(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.**Note Meta Title, Meta Description, Keywords (Short Tail) and Keywords (Long Tail) should include English words which are searched by users with the language in ${
     language === "Hindi"
       ? "Hinglish (Hindi and English mix)"
       : language === "Bangla"
@@ -293,7 +306,7 @@ Format: Provide in a comma-separated list.",
     const result = await openai.chat.completions.create({
       model: "gpt-4o", // Use the desired OpenAI model
       max_tokens: 4096,
-      temperature: 0.7,
+      temperature: 0.5,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -380,12 +393,13 @@ Format: Provide in a comma-separated list.",
 
 const optimizeExplainerSeo = async (
   articleText,
+  articleLanguage,
   headline = null,
   description = null
 ) => {
   console.log("IT IS EXPLAINER CONTENT");
-
-  const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in language in which article is written(English, Hindi, Bangla).
+  const language = articleLanguage;
+  const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in ${language} language.
   
   **Examples of Boomlive Titles**:
   - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
@@ -415,7 +429,7 @@ const optimizeExplainerSeo = async (
   
   **Article Headline**: ${headline}
   **Article Description**: ${description}
-   **Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)**: ${articleText}
+   **Understand the language in which article content is and provide *all* content in the ${language} language**: ${articleText}
   
   **Writing Style Characteristics**:
   - Use straightforward, clear language without jargon.
@@ -437,45 +451,71 @@ const optimizeExplainerSeo = async (
   **Schema Definitions**:
   - Provide complrte explanations of ClaimReview schema importance in improving visibility and credibility.
   
-  Understand the language in which article content is and provide *all* content in the same language(Eg:- English, Hindi, Bangla)** and Respond with the JSON format:
+  Understand the language in which article content is and provide *all* content in the ${language} and Respond with the JSON format:
   {
     "Title": [
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
     ],
+
     "Description": [
-      "Provide 3 concise, SEO-optimized descriptions  in (160-180 characters each),refer examples above of description to clarify the claim’s context or finding."
-    ],
+      "Provide 3 concise, SEO-optimized descriptions in ${language} (160-180 characters each) that clarify the claim’s context or findings, following Boom's style of writing. Each description should be informative and engaging, similar to the following examples: \n\n- The story of APAAR reflects a broader tension in India's education system: the push for digital modernisation versus the need to address fundamental infrastructure and resource gaps. \n  https://www.boomlive.in/explainers/apaar-id-is-india-ready-for-a-national-digital-id-system-for-students-26908 \n\n- पॉलीग्राफ टेस्ट की सटीकता और कोर्ट में इसे सबूत के रूप में पेश किए जाने को लेकर हमेशा सवाल उठते आए हैं. \n  https://hindi.boomlive.in/explainers/kolkata-rape-murder-case-what-is-polygraph-test-on-sanjay-roy-26330 \n\n- এই অনুসন্ধান একটি বিব্রতকর ঘটনা তুলে ধরে যেখানে ভারতের এক যৌন নিপীড়ন ও হত্যার ভুক্তভোগীর ছবি কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে সম্পাদনা করা হয়েছে।"
+    ]
+
     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url, formatted with hyphens and reflecting Boomlive’s style.",
-    "Tags":"Generate a set of 5-7 highly specific, SEO-optimized tags that reflect core aspects of the article and align with Boomlive’s explainor tone and audience. Each tag should:
 
-        Target User Search Intent: Aim for terms users might search when explainor, with an emphasis on high-relevance keywords for Middle East politics, misinformation verification, and viral content analysis.
+    "Tags": "Generate 5-7 specific, SEO-optimized tags that reflect the core aspects of the article and align with Boomlive’s factual tone. Each tag should:
 
-        Prioritize Low-Competition, High-Volume Keywords: Focus on keywords and phrases with higher search volume but moderate-to-low competition, optimizing for visibility in search engines.
+    - **Target User Intent**: Focus on keywords users search for when fact-checking political misinformation, especially related to Middle East politics and viral content analysis.
+      
+    - **Prioritize Keywords**: Choose low-competition, high-volume keywords to enhance visibility in search engines.
+      
+    - **Highlight Specifics**: Include key figures, geographic regions, and the context of the misinformation, avoiding generic terms.
+      
+    - **Reflect Trends**: Capture common terms and current trends in fact-checking and misinformation relevant to the article.
 
-        Include Specific People, Regions, and Topics: Highlight distinct details such as key figures, geographic regions, and the viral misinformation context, avoiding generic tags.
+    - **Example Structure**: Use phrases like 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', or '[specific person/region] viral claim'.
 
-        Capture Related Trends in explainor: Use tags that reflect current trends or common terms within explainor, creating relevance for readers interested in these themes.
+    Provide the tags in a comma-separated list in ${language}.",
 
-        Example Structure: 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', '[specific person or region]' combined with ‘viral claim’ or ‘false claim’ phrasing.
+    "Meta Title": "Use a meta title under 60 characters, combining primary keywords in English and the article's language. Examples include: ${
+      language === "Hindi"
+        ? "प्रधानमंत्री मोदी AI-Generated फोटो पर प्रतिक्रिया, COVID Vaccine पर मिथ্যাচার"
+        : language === "Bangla"
+        ? "'Durga Puja নিয়ে Viral ভিডিও: সত্যি কি?', 'PM মোদী Fake News নিয়ে জানিয়েছেন গুরুত্বপূর্ণ তথ্য'"
+        : "Prime Minister Modi Responds to AI-Generated Photo, COVID Myths Explained"
+    }. Provide a meta title under 60 characters using primary keywords.",
 
-        Avoid general terms, crafting each tag with precision for relevance to Boomlive’s explainor approach and the article’s specific misinformation claim.
-        Format: Provide in a comma-separated list in ${language} language.",
-    "Meta Title": "Provide a meta title under 60 characters using primary keywords.",
-    "Meta Description": "Provide a meta description under 155 characters summarizing the explainor analysis in Boomlive’s style",
+    "Meta Description": "Use Hinglish words or a combination of English and Bangla language if the article content is in Hindi or Bangla.Provide a meta description under 155 characters summarizing the explainor analysis in Boomlive’s style",
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
-  "Keywords (Short Tail)": "Generate a list of 5-7 highly specific, SEO-optimized short-tail keywords related to the article's topic. The keywords should:
 
-Focus on Unique Aspects: Identify distinctive terms that accurately reflect the main themes or subjects of the article, ensuring they capture niche topics rather than generic terms.
-Incorporate Relevant Context: Include keywords that are particularly relevant to the nuances of explainor or explanatory content, avoiding overly broad or commonly used phrases.
-Prioritize Search Volume and Competition: Choose keywords with high search volume that also have lower competition, enhancing the potential for visibility and engagement.
-Format: Provide in a comma-separated list.",
-    "Keywords (Long Tail)": "Generate a list of 5-7 detailed, SEO-optimized long-tail keywords that address specific queries related to the article’s topic. Each keyword should:
+  "Keywords (Short Tail)": "Generate a list of ${
+    language === "Hindi"
+      ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims in the article. Include both Hindi and English terms. Examples: 'मुख्य समाचार, हाल की घटनाएँ, तथ्य जांच, वायरल खबरें, सामाजिक मुद्दे', 'Main news, recent events, fact-checking, viral news, social issues'.'"
+      : language === "Bangla"
+      ? "'Bangla, Banglish, and English keywords focusing on key elements of the article. Include a mix of both languages. Examples: 'সাম্প্রদায়িক দাবি, তথ্যের সত্যতা, সাম্প্রতিক ঘটনা, আইনগত প্রসঙ্গ, সামাজিক প্রসঙ্গ', 'Communal claims, information accuracy, recent events, legal context, social issues'.'"
+      : " 'English keywords related to the article's main topics and claims. Examples: 'current news, recent events, fact-checking, viral claims, social issues'.'"
+  }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should:
 
-Capture Specific User Intent: Phrase keywords to align with unique user inquiries relevant to the article, ensuring they go beyond generic phrases and address particular concerns or interests.
-Highlight Niche Relevance: Focus on keywords that speak to particular details of the topic, such as recent events, lesser-known facts, or specific angles, avoiding broad keywords that lack specificity.
-Match the Article Type: Tailor keywords to resonate with the content style—either explainor or explanatory—emphasizing clarity and informative nature without using common or vague language.
-Format: Provide in a comma-separated list.",
+- **Align with Search Intent**: Use contextual terms popular among users searching for content related to the article's themes.
+- **Incorporate Unique Details**: Reflect specific events, claims, or important details mentioned in the article.
+- **Prioritize Low Competition, High Volume**: Focus on keywords with significant search volume but moderate competition for better visibility.
+- **Format**: Provide in a comma-separated list."
+
+"Keywords (Long Tail)": "Generate a list of ${
+    language === "Hindi"
+      ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords targeting specific user queries and reflecting unique content aspects. Examples: 'हाल की घटनाओं की सच्चाई कैसे जांचें?, साम्प्रদायिक दावों की सत्यता कैसे जानें?, वायरल खबरों की जाँच के लिए कदम क्या हैं?', 'How to check the truth of recent events?, How to verify communal claims?, What are the steps to check viral news?'.'"
+      : language === "Bangla"
+      ? "'Bangla, Banglish, and English long-tail keywords addressing popular inquiries related to the article. Include specific keywords reflecting unique content elements. Examples: 'সাম্প্রদায়িক দাবির সত্যতা যাচাই করার উপায় কি?, সাম্প্রতিক ঘটনার প্রভাব নিয়ে আলোচনা, ভাইরাল খবর যাচাই করার টিপস কি?', 'How to verify the accuracy of communal claims?, Discussion on the impact of recent events, Tips for verifying viral news?'.'"
+      : "'English long-tail keywords highly searched and related to the article’s main themes. Include specific keywords targeting detailed user queries. Examples: 'How to fact-check current news?, What are the legal implications of recent events?, Steps for verifying viral claims?.'"
+  }. Include 5-7 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should:
+
+- **Directly Address User Intent**: Tailor keywords to answer specific questions or concerns related to the article.
+- **Emphasize Niche Relevance**: Highlight particular aspects of the topic, avoiding overly broad keywords.
+- **Match Article Type**: Align keywords with the content style—whether fact-checking or explanatory—ensuring clarity and informative value.
+- **Prioritize Search Volume**: Select keywords with high search volume for enhanced visibility.
+- **Format**: Provide in a comma-separated list."
+
     "Article Summary Block": {
           "Heading": "A concise, SEO-optimized heading summarizing the article.",
           "Summary": ["Provide a 5-point summary capturing key points in Boomlive's clear style, with each point in one sentence."]
@@ -513,7 +553,8 @@ Format: Provide in a comma-separated list.",
 
 // Main function to optimize SEO based on article type
 const optimizeSeoUsingOpenAI = async (reqBody) => {
-  const { headline, description, articleText, articleType } = reqBody;
+  const { headline, description, articleText, articleType, articleLanguage } =
+    reqBody;
 
   if (!articleText) {
     throw new Error("Article content is mandatory.");
@@ -523,9 +564,19 @@ const optimizeSeoUsingOpenAI = async (reqBody) => {
   console.log(articleType);
 
   if (articleType == "factcheck") {
-    return await optimizeFactcheckSeo(articleText, headline, description);
+    return await optimizeFactcheckSeo(
+      articleText,
+      articleLanguage,
+      headline,
+      description
+    );
   } else {
-    return await optimizeExplainerSeo(articleText, headline, description);
+    return await optimizeExplainerSeo(
+      articleText,
+      articleLanguage,
+      headline,
+      description
+    );
   }
 };
 
