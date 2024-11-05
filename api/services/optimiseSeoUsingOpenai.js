@@ -151,7 +151,7 @@ const optimizeFactcheckSeo = async (
 
     Provide the tags in a comma-separated list in ${language}.",
 
-    "Meta Title": "Create a meta title under 60 characters, combining primary keywords in both English and the article's language for Hindi or Bangla content, as users often search in a mix of languages. For example, ${
+    "Meta Title": "Create a meta title under 60 characters, combining primary keywords in both English and ${language}, as users often search in a mix of English-${language}. For example, ${
       language === "hindi"
         ? "‘PM Modi और COVID Vaccine पर भ्रामक दावा’"
         : language === "bangla"
@@ -159,7 +159,7 @@ const optimizeFactcheckSeo = async (
         : "‘Prime Minister Modi Responds to Viral Image Claims,’ ‘Truth Behind Prayagraj Viral Photo’"
     }. Ensure the title is clear, relevant, and uses primary keywords effectively for SEO."
 
-    "Meta Description": "Create a meta description under 155 characters that summarizes the fact-check analysis in Boomlive’s style. For articles in Hindi or Bangla, use a combination of Hindi and English or Bangla and English words, as users often search in a mix of languages. For example, ${
+    "Meta Description": "Create a meta description under 155 characters that summarizes the fact-check analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. For example, ${
       language === "hindi"
         ? "‘BOOM ने भ्रामक दावे का सच बताया – Prayagraj में वायरल तस्वीर की हकीकत’"
         : language === "bangla"
@@ -176,7 +176,7 @@ const optimizeFactcheckSeo = async (
           : language === 'Bangla'
           ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages. Examples include: 'সাম্প্রদায়িক দাবি, তথ্যের সত্যতা, সাম্প্রতিক ঘটনা, আইনগত প্রসঙ্গ, সামাজিক প্রসঙ্গ', 'Communal claims, information accuracy, recent events, legal context, social issues'.'"
           :" 'English keywords related to the article's main topics and claims. Examples include: 'current news, recent events, fact-checking, viral claims, social issues'.'"
-    }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should:
+    }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should be in English-${language} language:
 
     - **Focus on Contextual Terms**: Align with popular search terms relevant to the article's content and themes.
     - **Incorporate Relevant Details**: Reflect unique aspects like specific events, claims, or significant details mentioned in the article.
@@ -347,7 +347,7 @@ const optimizeExplainerSeo = async (
 
     Provide the tags in a comma-separated list in ${language}.",
 
-    "Meta Title": "Use a meta title under 60 characters, combining primary keywords in English and the article's language. Examples include: ${
+    "Meta Title": "Use a meta title under 60 characters, combining primary keywords in English and ${language} language , as users often search in a mix of English-${language}. Examples include: ${
       language === "hindi"
         ? " COVID Vaccine पर मिथ্যাচার"
         : language === "bangla"
@@ -355,7 +355,8 @@ const optimizeExplainerSeo = async (
         : "Prime Minister Modi Responds to AI-Generated Photo, COVID Myths Explained"
     }. Provide a meta title under 60 characters using primary keywords.",
 
-    "Meta Description": "Use Hinglish words or a combination of English and Bangla language if the article content is in Hindi or Bangla.Provide a meta description under 155 characters summarizing the explainor analysis in Boomlive’s style",
+    "Meta Description": "Create a meta description under 155 characters that summarizes the explainer analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. Ensure this summary captures the main findings in an SEO-friendly format.",
+    
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
 
