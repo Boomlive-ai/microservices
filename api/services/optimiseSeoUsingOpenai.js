@@ -9,128 +9,46 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // Use the API key from the .env file
 });
 
-// Function to determine article type using OpenAI
-const determineArticleType = async (content) => {
-  // const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer". If the article discusses a claim and its verification, categorize it as "factcheck". Otherwise, categorize it as "explainer".
-  const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer in just one word".
-    Article content: ${content}`;
-
-  try {
-    const result = await openai.chat.completions.create({
-      model: "gpt-4o", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 2000,
-      temperature: 0.7,
-    });
-    const resultText = result.choices[0].message.content;
-    console.log("resultText", resultText); // Log the result for debugging purposes
-
-    const parsedResponse = resultText.toLowerCase().includes("factcheck")
-      ? "factcheck"
-      : "explainer";
-
-    return parsedResponse;
-  } catch (error) {
-    console.error("Error determining article type:", error);
-    throw new Error("Failed to determine article type.");
-  }
-};
-
-// // Function to optimize SEO for fact-checking content
-// const optimizeFactcheckSeo = async (
-//   articleText,
-//   headline = null,
-//   description = null
-// ) => {
-//   console.log("IT IS FACT CHECKING CONTENT");
-
-//   const prompt = `You are an SEO Expert for a news content publishing website like  boomlive.in.
-
-//   1) Review the following article for SEO best practices to enhance its reader-friendliness and search engine optimization. Use the tone of boomlive.in while applying best SEO practices. Article content: ${articleText}
-
-//   2) Subheadings ( H2 & H3 ) should be seo firendly and suitable google snippets.
-//   Provide the following parameters in JSON format based on the article analysis:
-//   {
-//   "Title": [
-//     "Title1: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**",
-//     "Title2: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**",
-//     "Title3: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**"
-//   ],
-//     "Description": [
-//       "Description1: A clear, concise statement like description in breif summarizing the article.",
-//       "Description2: A clear, concise statement like description in breif summarizing the article.",
-//       "Description3: A clear, concise statement like description in breif summarizing the article."
-//     ],
-//     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url.",
-//     "Tags": "Provide minimum atleast 20 specific tags with high search volume and low competition (ideally under 40). Avoid generic or broad terms, such as 'Privacy Concerns' or 'Unwanted Calls.' Ensure the tags are niche-focused, directly relevant to the article content, and align with the tone of boomlive.in.  Eg. tag1, tag2,...,tagn",
-//     "Meta Title": "A concise title that includes relevant keywords.",
-//     "Meta Description": "A summary of the article's analysis, starting with actions taken, e.g., 'Boom analyzed this article to clarify false claims.'",
-//     "Sub Headings (H2)": [Subheadings ( H2 & H3 ) should be seo firendly and suitable google snippets Eg: "", "","",..,""],
-//     "Sub Headings (H3)": [ Subheadings ( H2 & H3 ) should be seo firendly and suitable google snippets Eg: "","","",..,""],
-//     "Keywords (Short and Long Tail)": "Suggest meta keywords both short and long-tail that users may search for the stories   with high search volume and low competition. Eg. keyword1, keyword2,...,keywordn",
-//     "ClaimReview Schema": {
-//         "Claim": "Mention the complete claim mentioned in the article",
-//         "Fact-Check": "True or False"
-//     },
-//     "Factcheck Summary": {
-//         "Claim": "",
-//         "Fact-Check": ""
-//     },
-//     "Article Summary Block": {
-//         "Heading": "A summarized heading for the article.",
-//         "Summary": ["", "", "", "", ""]
-//     },
-//     "How We Did It": [
-//         "Step 1: ",
-//         "Step 2: ",
-//         "Step n: "
-//     ]
-//   }`;
+// // Function to determine article type using OpenAI
+// const determineArticleType = async (content) => {
+//   // const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer". If the article discusses a claim and its verification, categorize it as "factcheck". Otherwise, categorize it as "explainer".
+//   const prompt = `Analyze the following article and determine whether it is a "factcheck" or an "explainer in just one word".
+//     Article content: ${content}`;
 
 //   try {
 //     const result = await openai.chat.completions.create({
-//       model: "gpt-4o", // Use the desired OpenAI model // gpt-4o  or // gpt-4o
-//       max_tokens: 4096,
-//       temperature: 0.5,
+//       model: "gpt-4o", // gpt-4o or gpt-4 Use the desired OpenAI model (GPT-4 in this case)
 //       messages: [{ role: "user", content: prompt }],
+//       max_tokens: 2000,
+//       temperature: 0.7,
 //     });
 //     const resultText = result.choices[0].message.content;
-//     console.log(resultText); // For debugging
+//     console.log("resultText", resultText); // Log the result for debugging purposes
 
-//     const jsonResponseStart = resultText.indexOf("{");
-//     const jsonResponseEnd = resultText.lastIndexOf("}");
-//     const jsonString = resultText.substring(
-//       jsonResponseStart,
-//       jsonResponseEnd + 1
-//     );
+//     const parsedResponse = resultText.toLowerCase().includes("factcheck")
+//       ? "factcheck"
+//       : "explainer";
 
-//     const jsonResponse = JSON.parse(jsonString);
-//     console.log(jsonResponse);
-
-//     // jsonResponse["Sub Headings (H2)"] = jsonResponse["Sub Headings (H2)"]
-//     //   .replace(/## /g, "") // Remove '## ' symbols
-//     //   .replace(/\n/g, ""); // Remove new line characters
-//     // jsonResponse["Sub Headings (H3)"] = jsonResponse["Sub Headings (H3)"]
-//     //   .replace(/## /g, "") // Remove '## ' symbols
-//     //   .replace(/\n/g, ""); // Remove new line characters
-//     return jsonResponse; // Return the JSON object
+//     return parsedResponse;
 //   } catch (error) {
-//     console.error("Error generating fact-check SEO:", error);
-//     throw new Error("Failed to generate fact-check SEO.");
+//     console.error("Error determining article type:", error);
+//     throw new Error("Failed to determine article type.");
 //   }
 // };
+
 
 const optimizeFactcheckSeo = async (
   articleText,
   articleLanguage,
+  focusKeywords,
   headline = null,
   description = null
 ) => {
-  console.log("It Is a Fact Check Content");
+  const language = articleLanguage.toLowerCase();;
+  console.log("It Is a Fact Check Content in ",language);
+  console.log(`These are focus keywords or sentences: ${focusKeywords}`);
 
-  const language = articleLanguage;
   // const language = detectLanguage(articleText);
-  console.log(language);
   const prompt = `
   You are an SEO and content expert skilled in ${language} fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
@@ -162,7 +80,8 @@ const optimizeFactcheckSeo = async (
   **Article Headline**: ${headline}
   **Article Description**: ${description}
   **Understand the language in which article content is and provide *all* content in the ${language} language(Eg:- English, Hindi, Bangla)**: ${articleText}
-  
+  **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
+
   **Writing Style Characteristics**:
   - Use straightforward, clear language without jargon.
   - Ensure clarity and brevity in titles and descriptions, aiming for reader engagement.
@@ -190,9 +109,9 @@ const optimizeFactcheckSeo = async (
   
   **Writing Style Characteristics**:
   - Use ${
-    language === "Hindi"
+    language === "hindi"
       ? "Hinglish (Hindi and English mix)"
-      : language === "Bangla"
+      : language === "bangla"
       ? "Bangla-English"
       : "English"
   } depending on article content language.
@@ -200,7 +119,7 @@ const optimizeFactcheckSeo = async (
   - Maintain a neutral yet slightly urgent tone, encouraging readers to understand the implications of misinformation.
 
 
-  Understand the language in which article content is and provide *all* content in the ${language} and Respond with the JSON format:
+  Understand the language in which article content is and provide *all* content in the ${language} and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**.Respond with the JSON format:
   
   {
     "Title": [
@@ -233,17 +152,17 @@ const optimizeFactcheckSeo = async (
     Provide the tags in a comma-separated list in ${language}.",
 
     "Meta Title": "Create a meta title under 60 characters, combining primary keywords in both English and the article's language for Hindi or Bangla content, as users often search in a mix of languages. For example, ${
-      language === "Hindi"
-        ? "‘Prayagraj वायरल तस्वीर: BOOM ने बताई सच्चाई,’ ‘PM Modi और COVID Vaccine पर भ्रामक दावा’"
-        : language === "Bangla"
-        ? "‘Prayagraj ভাইরাল ছবি: আসল সত্য’, ‘PM মোদী ভুয়া খবর যাচাই’"
+      language === "hindi"
+        ? "‘PM Modi और COVID Vaccine पर भ्रामक दावा’"
+        : language === "bangla"
+        ? "PM মোদী ভুয়া খবর যাচাই"
         : "‘Prime Minister Modi Responds to Viral Image Claims,’ ‘Truth Behind Prayagraj Viral Photo’"
     }. Ensure the title is clear, relevant, and uses primary keywords effectively for SEO."
 
     "Meta Description": "Create a meta description under 155 characters that summarizes the fact-check analysis in Boomlive’s style. For articles in Hindi or Bangla, use a combination of Hindi and English or Bangla and English words, as users often search in a mix of languages. For example, ${
-      language === "Hindi"
+      language === "hindi"
         ? "‘BOOM ने भ्रामक दावे का सच बताया – Prayagraj में वायरल तस्वीर की हकीकत’"
-        : language === "Bangla"
+        : language === "bangla"
         ? "‘BOOM জানায় বিভ্রান্তিকর দাবির সত্যতা – Prayagraj ভাইরাল ছবির আসল সত্য’"
         : "‘BOOM clarifies misleading claim – truth behind viral Prayagraj image’"
     }. Ensure this summary captures the main findings in an SEO-friendly format."
@@ -300,12 +219,15 @@ const optimizeFactcheckSeo = async (
   }
   
   Only provide the output in the language in which article content is written(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.**Note Meta Title, Meta Description, Keywords (Short Tail) and Keywords (Long Tail) should include English words which are searched by users with the language in ${
-    language === "Hindi"
+    language === "hindi"
       ? "Hinglish (Hindi and English mix)"
-      : language === "Bangla"
+      : language === "bangla"
       ? "Bangla-English"
       : "English"
   }**
+
+    **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
+
   `;
 
   try {
@@ -334,77 +256,18 @@ const optimizeFactcheckSeo = async (
   }
 };
 
-// const optimizeExplainerSeo = async (
-//   articleText,
-//   headline = null,
-//   description = null
-// ) => {
-//   console.log("IT IS EXPLAINER CONTENT");
-
-//   const prompt = `You are an SEO Expert for a news content publishing website like boomlive.in.
-//   1) Review the following article for SEO best practices to enhance its reader-friendliness and search engine optimization. Use the tone of boomlive.in while applying best SEO practices. Article content: ${articleText}
-
-//   2) Subheadings ( H2 & H3 ) should be seo firendly and suitable google snippets.
-//   Provide the following parameters in JSON format:
-//   {
-//       "Title": [
-//     "Title1: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**",
-//     "Title2: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**",
-//     "Title3: Capture the article's core context in 60-70 characters, aligned with Google’s recommendations. **Do not use colons (:) anywhere in the title. Rephrase the title naturally to avoid colons, and ensure it flows as a single phrase or sentence. Examples of unacceptable titles: 'Jaipur RSS Attack: No Communal Angle.' Instead, use phrases like 'Jaipur RSS Workers Attack Debunked for False Claims.'**"
-//   ],
-//     "Description": [
-//       "Description1: A clear, concise statement like description in breif summarizing the article.",
-//       "Description2: A clear, concise statement like description in breif summarizing the article.",
-//       "Description3: A clear, concise statement like description in breif summarizing the article."
-//     ],
-//     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url.",
-//     "Tags": "Provide minimum atleast 20 specific tags with high search volume and low competition (ideally under 40). Avoid generic or broad terms, such as 'Privacy Concerns' or 'Unwanted Calls.' Ensure the tags are niche-focused, directly relevant to the article content, and align with the tone of boomlive.in.  Eg. tag1, tag2,...,tagn",
-//     "Meta Title": "A concise title that includes relevant keywords.",
-//     "Meta Title": "A concise title that includes relevant keywords.",
-//     "Meta Description": "A summary of the article's analysis, starting with actions taken, e.g., 'Boom analyzed this article to clarify false claims.'",
-//     "Sub Headings (H2)": ["", "", "", ""],
-//     "Sub Headings (H3)": ["", "", "", ""],
-//     "Keywords (Short and Long Tail)": "A list of short and long-tail keywords that users may search for the stories",
-//     "Article Summary Block": {
-//       "Heading": "A summarized heading for the article.",
-//       "Summary": ["", "", "", "", ""]
-//     }
-//   }`;
-
-//   try {
-//     const result = await openai.chat.completions.create({
-//       model: "gpt-4o", // Specify the desired OpenAI model // gpt-4
-//       messages: [{ role: "user", content: prompt }],
-//       max_tokens: 4096,
-//       temperature: 0.5,
-//     });
-
-//     const resultText = result.choices[0].message.content;
-
-//     const jsonResponseStart = resultText.indexOf("{");
-//     const jsonResponseEnd = resultText.lastIndexOf("}");
-//     const jsonString = resultText.substring(
-//       jsonResponseStart,
-//       jsonResponseEnd + 1
-//     );
-
-//     const jsonResponse = JSON.parse(jsonString);
-
-//     return jsonResponse; // Return the JSON object
-//   } catch (error) {
-//     console.error("Error generating explainer SEO:", error);
-//     throw new Error("Failed to generate explainer SEO.");
-//   }
-// };
 
 const optimizeExplainerSeo = async (
   articleText,
   articleLanguage,
+  focusKeywords,
   headline = null,
   description = null
 ) => {
-  console.log("IT IS EXPLAINER CONTENT");
-  const language = articleLanguage;
+  const language = articleLanguage.toLowerCase();
+  console.log("IT IS EXPLAINER CONTENT in ", language);
+  console.log(`These are focus keywords or sentences: ${focusKeywords}`);
+  
   const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in ${language} language.
   
   **Examples of Boomlive Titles**:
@@ -435,8 +298,9 @@ const optimizeExplainerSeo = async (
   
   **Article Headline**: ${headline}
   **Article Description**: ${description}
-   **Understand the language in which article content is and provide *all* content in the ${language} language**: ${articleText}
-  
+  **Understand the language in which article content is and provide *all* content in the ${language} language**: ${articleText}
+  **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
+
   **Writing Style Characteristics**:
   - Use straightforward, clear language without jargon.
   - Ensure clarity and brevity in titles and descriptions, aiming for reader engagement.
@@ -457,7 +321,7 @@ const optimizeExplainerSeo = async (
   **Schema Definitions**:
   - Provide complrte explanations of ClaimReview schema importance in improving visibility and credibility.
   
-  Understand the language in which article content is and provide *all* content in the ${language} and Respond with the JSON format:
+  Understand the language in which article content is and provide *all* content in the ${language}  and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**. Respond with the JSON format:
   {
     "Title": [
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
@@ -484,9 +348,9 @@ const optimizeExplainerSeo = async (
     Provide the tags in a comma-separated list in ${language}.",
 
     "Meta Title": "Use a meta title under 60 characters, combining primary keywords in English and the article's language. Examples include: ${
-      language === "Hindi"
-        ? "प्रधानमंत्री मोदी AI-Generated फोटो पर प्रतिक्रिया, COVID Vaccine पर मिथ্যাচার"
-        : language === "Bangla"
+      language === "hindi"
+        ? " COVID Vaccine पर मिथ্যাচার"
+        : language === "bangla"
         ? "'Durga Puja নিয়ে Viral ভিডিও: সত্যি কি?', 'PM মোদী Fake News নিয়ে জানিয়েছেন গুরুত্বপূর্ণ তথ্য'"
         : "Prime Minister Modi Responds to AI-Generated Photo, COVID Myths Explained"
     }. Provide a meta title under 60 characters using primary keywords.",
@@ -496,9 +360,9 @@ const optimizeExplainerSeo = async (
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
 
   "Keywords (Short Tail)": "Generate a list of ${
-    language === "Hindi"
+    language === "hindi"
       ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims in the article. Include both Hindi and English terms. Examples: 'मुख्य समाचार, हाल की घटनाएँ, तथ्य जांच, वायरल खबरें, सामाजिक मुद्दे', 'Main news, recent events, fact-checking, viral news, social issues'.'"
-      : language === "Bangla"
+      : language === "bangla"
       ? "'Bangla, Banglish, and English keywords focusing on key elements of the article. Include a mix of both languages. Examples: 'সাম্প্রদায়িক দাবি, তথ্যের সত্যতা, সাম্প্রতিক ঘটনা, আইনগত প্রসঙ্গ, সামাজিক প্রসঙ্গ', 'Communal claims, information accuracy, recent events, legal context, social issues'.'"
       : " 'English keywords related to the article's main topics and claims. Examples: 'current news, recent events, fact-checking, viral claims, social issues'.'"
   }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should:
@@ -509,9 +373,9 @@ const optimizeExplainerSeo = async (
 - **Format**: Provide in a comma-separated list."
 
 "Keywords (Long Tail)": "Generate a list of ${
-    language === "Hindi"
+    language === "hindi"
       ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords targeting specific user queries and reflecting unique content aspects. Examples: 'हाल की घटनाओं की सच्चाई कैसे जांचें?, साम्प्रদायिक दावों की सत्यता कैसे जानें?, वायरल खबरों की जाँच के लिए कदम क्या हैं?', 'How to check the truth of recent events?, How to verify communal claims?, What are the steps to check viral news?'.'"
-      : language === "Bangla"
+      : language === "bangla"
       ? "'Bangla, Banglish, and English long-tail keywords addressing popular inquiries related to the article. Include specific keywords reflecting unique content elements. Examples: 'সাম্প্রদায়িক দাবির সত্যতা যাচাই করার উপায় কি?, সাম্প্রতিক ঘটনার প্রভাব নিয়ে আলোচনা, ভাইরাল খবর যাচাই করার টিপস কি?', 'How to verify the accuracy of communal claims?, Discussion on the impact of recent events, Tips for verifying viral news?'.'"
       : "'English long-tail keywords highly searched and related to the article’s main themes. Include specific keywords targeting detailed user queries. Examples: 'How to fact-check current news?, What are the legal implications of recent events?, Steps for verifying viral claims?.'"
   }. Include 5-7 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should:
@@ -529,6 +393,9 @@ const optimizeExplainerSeo = async (
   }
         
   Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which content is written orignally (English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
+
+    **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
+
   `;
 
   try {
@@ -536,7 +403,7 @@ const optimizeExplainerSeo = async (
       model: "gpt-4o", // Specify the desired OpenAI model // gpt-4
       messages: [{ role: "user", content: prompt }],
       max_tokens: 4096,
-      temperature: 0.7,
+      temperature: 0.5,
     });
 
     const resultText = result.choices[0].message.content;
@@ -559,7 +426,7 @@ const optimizeExplainerSeo = async (
 
 // Main function to optimize SEO based on article type
 const optimizeSeoUsingOpenAI = async (reqBody) => {
-  const { headline, description, articleText, articleType, articleLanguage } =
+  const { headline, description, articleText, articleType, articleLanguage, focusKeywords } =
     reqBody;
 
   if (!articleText) {
@@ -573,6 +440,7 @@ const optimizeSeoUsingOpenAI = async (reqBody) => {
     return await optimizeFactcheckSeo(
       articleText,
       articleLanguage,
+      focusKeywords,
       headline,
       description
     );
@@ -580,6 +448,7 @@ const optimizeSeoUsingOpenAI = async (reqBody) => {
     return await optimizeExplainerSeo(
       articleText,
       articleLanguage,
+      focusKeywords,
       headline,
       description
     );
