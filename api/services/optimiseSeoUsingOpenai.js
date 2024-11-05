@@ -207,7 +207,13 @@ const optimizeFactcheckSeo = async (
       "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
     ],
     "Description": [
-      "Provide 3 concise, SEO-optimized descriptions  in ${language} (160-180 characters each), starting with 'BOOM found that...' if article content is in English or 'बूम ने पाया...' if article content is in Hindi or  'বুম যে পাওয়া গেছে...' if article content is in Bangla  to clarify the claim’s context or finding. Consider article is in ${language}"
+      "Provide 3 concise, SEO-optimized descriptions in ${language} (160-180 characters each), starting with ${
+        language === 'Hindi'
+          ? 'बूम ने पाया...'
+          : language === 'Bangla'
+          ? 'বুম যে পাওয়া গেছে...'
+          : 'BOOM found that...'
+      } to clarify the claim’s context or finding. Consider article is in ${language}."
     ],
 
     "Suggested URL": "Suggest a URL directly relevant to the article, formatted with hyphens and reflecting Boomlive’s style.",
