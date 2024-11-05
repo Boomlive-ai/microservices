@@ -52,6 +52,8 @@ const optimizeFactcheckSeo = async (
   const prompt = `
   You are an SEO and content expert skilled in ${language} fact-checking writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing.
   
+**Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
+
 **Examples of Boomlive Titles**:
   - "No, Uddhav Thackeray Did Not Admit To Eating Beef; Cropped Video Viral"
   - "Old Video Of Saudi Blogger Calling Netanyahu Viral With False Claims"
@@ -225,9 +227,6 @@ const optimizeFactcheckSeo = async (
       ? "Bangla-English"
       : "English"
   }**
-
-    **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
-
   `;
 
   try {
@@ -270,6 +269,8 @@ const optimizeExplainerSeo = async (
   
   const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in ${language} language.
   
+  **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
+
   **Examples of Boomlive Titles**:
   - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
   - "An AI Chatbot Is Being Blamed For A Teenager’s Suicide"
@@ -356,7 +357,7 @@ const optimizeExplainerSeo = async (
     }. Provide a meta title under 60 characters using primary keywords.",
 
     "Meta Description": "Create a meta description under 155 characters that summarizes the explainer analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. Ensure this summary captures the main findings in an SEO-friendly format.",
-    
+
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
 
@@ -394,9 +395,6 @@ const optimizeExplainerSeo = async (
   }
         
   Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which content is written orignally (English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
-
-    **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
-
   `;
 
   try {
