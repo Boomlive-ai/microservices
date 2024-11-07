@@ -172,18 +172,18 @@ const optimizeFactcheckSeo = async (
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
 
-    "Keywords (Short Tail)": "Generate a list of minimum 10 short tail keywords which include focus keywords from this ${focusKeywords} should order the important short-tail keywords first in order and don't include generic keywords at all like **prevent using these (viral video claim, misinformation, fact-check, viral video, false viral claim, social media)** ${
+    "Keywords (Short Tail)": "Generate a list of atleast 10 short tail keywords which include focus keywords from this ${focusKeywords} should order the important short-tail keywords first in order and don't include generic keywords at all like **prevent using these (viral video claim, misinformation, fact-check, viral video, false viral claim, social media)** ${
         language === 'Hindi'
           ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims presented in the article. Include both Hindi and English terms.'"
           : language === 'Bangla'
           ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages.'"
           :" 'English keywords related to the article's main topics and claims.'"
-    }. Include atleast 10 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should be in English-${language} language and should priopritize important or main keywords first in order:
+    }. Include atleast 10 SEO-optimized, short-tail keywords closely related to the article's unique aspects. Each of 10 or more keywords  should be in English-${language} language and should prioritize important or main keywords first in order:
 
     - **Focus on Contextual Terms**: Align with popular search terms relevant to the article's content and themes.
     - **Incorporate Relevant Details**: Reflect unique aspects like specific events, claims, or significant details mentioned in the article.
     - **Prioritize SEO for Search Volume and Competition**: Use keywords with high search volume and low competition for improved visibility and engagement.
-    - **Format**: Provide in a comma-separated list and should priopritize important or main keywords first in order."
+    - **Format**: Provide in a comma-separated list and should prioritize important or main keywords first in order."
 
 
     "Keywords (Long Tail)": "Generate a list of minimum 10 long tail keywords which include focus keywords or sentences from this ${focusKeywords} should order the important longtail keywords first in order and don't include generic keywords like (understanding misinformation, steps to verify, impact of misleading videos, viral video misrepresents)${
@@ -192,7 +192,7 @@ const optimizeFactcheckSeo = async (
           : language === 'Bangla'
           ? "'Bangla, Banglish, and English long-tail keywords that address popular user inquiries related to the article. Include specific keywords that reflect unique content elements. '"
           : "'English long-tail keywords that are highly searched and relate to the article’s main themes. Include specific keywords that target detailed user queries.'"
-    }. Include atleast 10 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should and should priopritize important or main keywords first in order:
+    }. Include atleast 10 SEO-optimized, long-tail keywords targeting detailed user queries. Each of 10 or more keywords should and should priopritize important or main keywords first in order:
 
     - **Capture Specific User Intent**: Craft keywords that directly address distinct user inquiries related to the article, ensuring they are tailored to answer specific questions or concerns.
     - **Highlight Niche Relevance**: Focus on keywords that emphasize particular aspects of the topic, such as recent events, unique claims, or region-specific details, avoiding overly broad keywords.
@@ -368,12 +368,12 @@ c
           : language === 'Bangla'
           ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages.'"
           :" 'English keywords related to the article's main topics and claims.'"
-    }. Include atleast 10 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should be in English-${language} language and should priopritize important or main keywords first in order:
+    }. Include atleast 10 SEO-optimized, short-tail keywords closely related to the article's unique aspects. Each of 10 or more keywords  should be in English-${language} language and should prioritize important or main keywords first in order:
 
 - **Align with Search Intent**: Use contextual terms popular among users searching for content related to the article's themes.
 - **Incorporate Unique Details**: Reflect specific events, claims, or important details mentioned in the article.
 - **Prioritize Low Competition, High Volume**: Focus on keywords with significant search volume but moderate competition for better visibility.
-- **Format**: Provide in a comma-separated list."
+- **Format**: Provide in a comma-separated list and should prioritize important or main keywords first in order."
 
 "Keywords (Long Tail)": "Generate a list of minimum 10 long tail keywords for explainers which include focus keywords or sentences from this ${focusKeywords} should order the important longtail keywords first in order and don't include generic keywords like (understanding misinformation, steps to verify, impact of misleading videos, viral video misrepresents)${
         language === 'Hindi'
