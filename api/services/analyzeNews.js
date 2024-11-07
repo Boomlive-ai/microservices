@@ -88,18 +88,18 @@ Article content: ${boomAnalysisText}.
 Return the results in this JSON format and note if source of claim has same entity as targets it shouldn't add them as targets:
 {
   "target": {
-    "individuals": ["Name1", "Name n" or null],  // Targets of the Original Claims or
+    "individuals": ["Name1-(sentiment-positive/negative/neutral) and why", "Name n-(sentiment-positive/negative/neutral)" or null],  // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
   
-    "organizations": [null if value of sourceofclaim is similar  or "Only those who are not considered as sourceofclaims"],  // Targets of the Original Claims or
+    "organizations": [null if value of sourceofclaim is similar  or "Only those who are not considered as sourceofclaims-(sentiment-positive/negative/neutral)  and why "], // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
   
-    "communities": ["Community1", "Community n" or null]  // Targets of the Original Claims or
+    "communities": ["Community1-(sentiment-positive/negative/neutral)  and why", "Community n-(sentiment-positive/negative/neutral)" or null]  // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
   
   },
 
   "sourceofclaim": "**list all the orginal sources who made the claims or spread several misinformation and from where boom did the analysis**",
   
   "sentiment": {
-    "classification": "Positive/Negative/Neutral", // if misinformation is spreaded sentiment is negative
+    "classification": "Positive/Negative/Neutral", // Understand what overall boom analysis provide the sentiment and consider neutral if there's any confusion in overall anaysis
     "justification": "One Line Justification for the sentiment"
   },
   

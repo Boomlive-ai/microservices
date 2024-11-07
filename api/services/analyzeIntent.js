@@ -70,7 +70,7 @@ const generateIntentForArticle = async (articleContent) => {
       const prompt = `
 Analyze the provided article content for the presence of the following intents. Use the definitions to guide your analysis:
 
-1. **Smear Campaign**: A coordinated effort to damage the reputation or credibility of an individual, group, or organization by spreading false, misleading, or exaggerated information. These claims typically aim to discredit a target through defamatory content, which may be personal, ideological, or politically motivated.
+1. **Smear Campaign**: A coordinated effort to damage the reputation or credibility of an individual, group, or organization by spreading false, misleading, or exaggerated information. These claims typically aim to discredit a target through defamatory content, which may be personal, ideological, or politically motivated and overall negatively.
 2. **Demographic Anxiety**: Information spread to evoke fear or resentment toward particular demographic groups, often motivated by a perception that certain communities pose a threat to cultural, economic, or political stability. These messages exploit societal fears about changes in population composition or social dominance.
 3. **Sensationalism**: Exaggerated or fabricated content designed to attract attention, provoke shock, or entertain, without necessarily intending harm to a specific group or individual. This type is often aimed at maximizing engagement or views, appealing to audiences' curiosity or emotions.
 4. **Fraud/Scam**: False or deceptive information crafted to manipulate individuals into taking actions that benefit the perpetrator, often resulting in financial or personal losses for the victim. This category includes fake offers, impersonations, phishing schemes, or deceptive claims designed to gain sensitive information, money, or access to resources from the target.
@@ -80,7 +80,7 @@ Return a JSON object containing:
 
 - An "Intent" array with identified intents.
 - An "Explanation" object with detailed explanations for each intent, structured as follows:
-
+Eg:-
 {
 "Intent": ["Sensationalism", "Smear Campaign"],
 "Explanation": {
