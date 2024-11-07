@@ -172,33 +172,33 @@ const optimizeFactcheckSeo = async (
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
 
-    "Keywords (Short Tail)": "Generate a list of ${
+    "Keywords (Short Tail)": "Generate a list of minimum 10 short tail keywords which include focus keywords from this ${focusKeywords} should order the important short-tail keywords first in order and don't include generic keywords at all like **prevent using these (viral video claim, misinformation, fact-check, viral video, false viral claim, social media)** ${
         language === 'Hindi'
-          ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims presented in the article. Include both Hindi and English terms. Examples include: 'मुख्य समाचार, हाल की घटनाएँ, तथ्य जांच, वायरल खबरें, सामाजिक मुद्दे', 'Main news, recent events, fact-checking, viral news, social issues'.'"
+          ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims presented in the article. Include both Hindi and English terms.'"
           : language === 'Bangla'
-          ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages. Examples include: 'সাম্প্রদায়িক দাবি, তথ্যের সত্যতা, সাম্প্রতিক ঘটনা, আইনগত প্রসঙ্গ, সামাজিক প্রসঙ্গ', 'Communal claims, information accuracy, recent events, legal context, social issues'.'"
-          :" 'English keywords related to the article's main topics and claims. Examples include: 'current news, recent events, fact-checking, viral claims, social issues'.'"
-    }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should be in English-${language} language:
+          ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages.'"
+          :" 'English keywords related to the article's main topics and claims.'"
+    }. Include atleast 10 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should be in English-${language} language and should priopritize important or main keywords first in order:
 
     - **Focus on Contextual Terms**: Align with popular search terms relevant to the article's content and themes.
     - **Incorporate Relevant Details**: Reflect unique aspects like specific events, claims, or significant details mentioned in the article.
     - **Prioritize SEO for Search Volume and Competition**: Use keywords with high search volume and low competition for improved visibility and engagement.
-    - **Format**: Provide in a comma-separated list."
+    - **Format**: Provide in a comma-separated list and should priopritize important or main keywords first in order."
 
 
-    "Keywords (Long Tail)": "Generate a list of ${
+    "Keywords (Long Tail)": "Generate a list of minimum 10 long tail keywords which include focus keywords or sentences from this ${focusKeywords} should order the important longtail keywords first in order and don't include generic keywords like (understanding misinformation, steps to verify, impact of misleading videos, viral video misrepresents)${
         language === 'Hindi'
-          ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords that target specific user queries and reflect unique aspects of the content. Examples include: 'हाल की घटनाओं की सच्चाई कैसे जांचें?, साम्प्रদायिक दावों की सत्यता कैसे जानें?, वायरल खबरों की जाँच के लिए कदम क्या हैं?', 'How to check the truth of recent events?, How to verify communal claims?, What are the steps to check viral news?'.'"
+          ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords that target specific user queries and reflect unique aspects of the content.'"
           : language === 'Bangla'
-          ? "'Bangla, Banglish, and English long-tail keywords that address popular user inquiries related to the article. Include specific keywords that reflect unique content elements. Examples include: 'সাম্প্রদায়িক দাবির সত্যতা যাচাই করার উপায় কি?, সাম্প্রতিক ঘটনার প্রভাব নিয়ে আলোচনা, ভাইরাল খবর যাচাই করার টিপস কি?', 'How to verify the accuracy of communal claims?, Discussion on the impact of recent events, Tips for verifying viral news?'.'"
-          : "'English long-tail keywords that are highly searched and relate to the article’s main themes. Include specific keywords that target detailed user queries. Examples include: 'How to fact-check current news?, What are the legal implications of recent events?, Steps for verifying viral claims?.'"
-    }. Include 5-7 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should:
+          ? "'Bangla, Banglish, and English long-tail keywords that address popular user inquiries related to the article. Include specific keywords that reflect unique content elements. '"
+          : "'English long-tail keywords that are highly searched and relate to the article’s main themes. Include specific keywords that target detailed user queries.'"
+    }. Include atleast 10 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should and should priopritize important or main keywords first in order:
 
     - **Capture Specific User Intent**: Craft keywords that directly address distinct user inquiries related to the article, ensuring they are tailored to answer specific questions or concerns.
     - **Highlight Niche Relevance**: Focus on keywords that emphasize particular aspects of the topic, such as recent events, unique claims, or region-specific details, avoiding overly broad keywords.
     - **Match the Article Type**: Align keywords with the content style—whether fact-checking or explanatory—ensuring clarity and informative value while avoiding vague or overused terms.
     - **Prioritize Search Volume and Competition**: Choose keywords with high search volume to enhance visibility and engagement.
-    - **Format**: Provide in a comma-separated list."
+    - **Format**: Provide in a comma-separated list and should priopritize important or main keywords first in order."
 
 
     "ClaimReview Schema": {
@@ -270,20 +270,7 @@ const optimizeExplainerSeo = async (
   const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in ${language} language.
   
   **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
-
-  **Examples of Boomlive Titles**:
-  - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
-  - "An AI Chatbot Is Being Blamed For A Teenager’s Suicide"
-  - "What Does Hamas Leader Yahya Sinwar's Death Mean For The Ongoing War?"
-  - "Reels to Rallies: New Report Reveals Influencers as Key Players in Political Narratives"
-  - "Explained: Who Exposed Data Of 3 Crore Star Health Customers?"
-  - "Why Are Experts Concerned About Airtel's New AI Spam Tool?"
-  - "Indian News Channels Give Communal Hue To Gruesome Bengaluru Murder"
-  - "Pager Attack On Hezbollah Is An Example Of A Booby Trap: What Does It Mean?"
-  - "How AI Images Fueled Pet-Eating Rumours About US Immigrants"
-  - "Ayushman Bharat To Cover All Citizens Over 70: How Will The Scheme Work?"
-  - "Australia Plans To Ban Social Media For Kids: Is It The Solution?"
-
+c
   **Examples of Boomlive Descriptions**:
   - "Character.AI has previously made headlines for its AI personas. Recently, a US resident found a chatbot created in the likeness of his daughter, who was murdered in 2006, on the platform."
   - "Israel has described the death of 61-year-old Sinwar as one of the most significant strikes against Hamas since the war began following the group's attacks on October 7, 2023."
@@ -325,7 +312,21 @@ const optimizeExplainerSeo = async (
   Understand the language in which article content is and provide *all* content in the ${language}  and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**. Respond with the JSON format:
   {
     "Title": [
-      "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
+      "Provide 3 Explainers title of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets.Refer examples above of boomlive explainers title, not it is not factcheck. refer boomlive.in explainer articles :- https://www.boomlive.in/explainers,  Eg:
+      
+  **Examples of Boomlive Titles**:
+  - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
+  - "An AI Chatbot Is Being Blamed For A Teenager’s Suicide"
+  - "What Does Hamas Leader Yahya Sinwar's Death Mean For The Ongoing War?"
+  - "Reels to Rallies: New Report Reveals Influencers as Key Players in Political Narratives"
+  - "Explained: Who Exposed Data Of 3 Crore Star Health Customers?"
+  - "Why Are Experts Concerned About Airtel's New AI Spam Tool?"
+  - "Indian News Channels Give Communal Hue To Gruesome Bengaluru Murder"
+  - "Pager Attack On Hezbollah Is An Example Of A Booby Trap: What Does It Mean?"
+  - "How AI Images Fueled Pet-Eating Rumours About US Immigrants"
+  - "Ayushman Bharat To Cover All Citizens Over 70: How Will The Scheme Work?"
+  - "Australia Plans To Ban Social Media For Kids: Is It The Solution?"
+"
     ],
 
     "Description": [
@@ -361,26 +362,26 @@ const optimizeExplainerSeo = async (
     "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
     "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
 
-  "Keywords (Short Tail)": "Generate a list of ${
-    language === "hindi"
-      ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims in the article. Include both Hindi and English terms. Examples: 'मुख्य समाचार, हाल की घटनाएँ, तथ्य जांच, वायरल खबरें, सामाजिक मुद्दे', 'Main news, recent events, fact-checking, viral news, social issues'.'"
-      : language === "bangla"
-      ? "'Bangla, Banglish, and English keywords focusing on key elements of the article. Include a mix of both languages. Examples: 'সাম্প্রদায়িক দাবি, তথ্যের সত্যতা, সাম্প্রতিক ঘটনা, আইনগত প্রসঙ্গ, সামাজিক প্রসঙ্গ', 'Communal claims, information accuracy, recent events, legal context, social issues'.'"
-      : " 'English keywords related to the article's main topics and claims. Examples: 'current news, recent events, fact-checking, viral claims, social issues'.'"
-  }. Include 5-7 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should:
+    "Keywords (Short Tail)": "Generate a list of minimum 10 explainer short tail keywords which include focus keywords from this ${focusKeywords} should order the important short-tail keywords first in order and don't include generic keywords at all like **prevent using these (viral video claim, misinformation, fact-check, viral video, false viral claim, social media)** ${
+        language === 'Hindi'
+          ? "'Hindi, Hinglish, and English keywords related to the main themes, events, and claims presented in the article. Include both Hindi and English terms.'"
+          : language === 'Bangla'
+          ? "'Bangla, Banglish, and English keywords focusing on the key elements of the article. Include a mix of both languages.'"
+          :" 'English keywords related to the article's main topics and claims.'"
+    }. Include atleast 10 SEO-optimized, short-tail keywords closely related to the article's unique aspects. The keywords should be in English-${language} language and should priopritize important or main keywords first in order:
 
 - **Align with Search Intent**: Use contextual terms popular among users searching for content related to the article's themes.
 - **Incorporate Unique Details**: Reflect specific events, claims, or important details mentioned in the article.
 - **Prioritize Low Competition, High Volume**: Focus on keywords with significant search volume but moderate competition for better visibility.
 - **Format**: Provide in a comma-separated list."
 
-"Keywords (Long Tail)": "Generate a list of ${
-    language === "hindi"
-      ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords targeting specific user queries and reflecting unique content aspects. Examples: 'हाल की घटनाओं की सच्चाई कैसे जांचें?, साम्प्रদायिक दावों की सत्यता कैसे जानें?, वायरल खबरों की जाँच के लिए कदम क्या हैं?', 'How to check the truth of recent events?, How to verify communal claims?, What are the steps to check viral news?'.'"
-      : language === "bangla"
-      ? "'Bangla, Banglish, and English long-tail keywords addressing popular inquiries related to the article. Include specific keywords reflecting unique content elements. Examples: 'সাম্প্রদায়িক দাবির সত্যতা যাচাই করার উপায় কি?, সাম্প্রতিক ঘটনার প্রভাব নিয়ে আলোচনা, ভাইরাল খবর যাচাই করার টিপস কি?', 'How to verify the accuracy of communal claims?, Discussion on the impact of recent events, Tips for verifying viral news?'.'"
-      : "'English long-tail keywords highly searched and related to the article’s main themes. Include specific keywords targeting detailed user queries. Examples: 'How to fact-check current news?, What are the legal implications of recent events?, Steps for verifying viral claims?.'"
-  }. Include 5-7 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should:
+"Keywords (Long Tail)": "Generate a list of minimum 10 long tail keywords for explainers which include focus keywords or sentences from this ${focusKeywords} should order the important longtail keywords first in order and don't include generic keywords like (understanding misinformation, steps to verify, impact of misleading videos, viral video misrepresents)${
+        language === 'Hindi'
+          ? "'Hindi, Hinglish, and English long-tail keywords that are highly searched and relevant to the article’s topic. Include keywords that target specific user queries and reflect unique aspects of the content.'"
+          : language === 'Bangla'
+          ? "'Bangla, Banglish, and English long-tail keywords that address popular user inquiries related to the article. Include specific keywords that reflect unique content elements. '"
+          : "'English long-tail keywords that are highly searched and relate to the article’s main themes. Include specific keywords that target detailed user queries.'"
+    }. Include atleast 10 SEO-optimized, long-tail keywords targeting detailed user queries. Each keyword should and should priopritize important or main keywords first in order:
 
 - **Directly Address User Intent**: Tailor keywords to answer specific questions or concerns related to the article.
 - **Emphasize Niche Relevance**: Highlight particular aspects of the topic, avoiding overly broad keywords.
