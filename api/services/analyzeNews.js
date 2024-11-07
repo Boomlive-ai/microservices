@@ -89,14 +89,14 @@ Return the results in this JSON format and note if source of claim has same enti
 {
   "target": {
     "individuals": ["Name1", "Name n" or null], 
-    "organizations": [null if value of sourceofclaim is similar  or "Only those who are not considered as sourceofclaims"],
+    "organizations": [null if value of sourceofclaim is similar  or "Only those who are not considered as sourceofclaims"], 
     "communities": ["Community1", "Community n" or null]
-  },
+  }, // Targets of the Original Claims
   
-  "sourceofclaim": "**list all the sources who made the false claims or spread several misinformation(Eg:News Media, Organizations, Indivial, Social Media Posts)**",
+  "sourceofclaim": "**list all the orginal sources who made the claims or spread several misinformation and from where boom did the analysis**",
   
   "sentiment": {
-    "classification": "Positive/Negative/Neutral",
+    "classification": "Positive/Negative/Neutral", // if misinformation is spreaded sentiment is negative
     "justification": "One Line Justification for the sentiment"
   },
   
@@ -117,7 +117,7 @@ Return the results in this JSON format and note if source of claim has same enti
         { role: "user", content: combinedPrompt },
       ],
       max_tokens: 1000,
-      temperature: 0.4,
+      temperature: 0.1,
     });
 
     const responseText = response.choices[0].message.content.trim();
@@ -137,7 +137,7 @@ console.log(results);
 const extractBoomAnalysis = async (articleText) => {
   try {
     // Prompt to instruct the model to extract only BOOM's analysis sections
-    const prompt = `From the article below, extract only the sections where BOOM provides its analysis or explanations of the claims. Do not include any parts that are purely quotes from the original claim or statements. Focus only on BOOM's fact-checking and explanations.
+    const prompt = `From the article below, extract only the sections where BOOM provides its analysis or explanations of the claims. Do not include any parts that are purely quotes from the original claim or statements. Focus only on BOOM's fact-checking and explanations, titles and claims**understand who made the claims** and also sentiment of article. Also understand the **source of claims** and **who made the claim**which are refered by boom analyzed from title, description and claim section(it can be any news channel, social  media account or any video or any individual), also identify who are the targets by the orginal sources claims.
     
     Article content: ${articleText}`;
 
@@ -155,7 +155,7 @@ const extractBoomAnalysis = async (articleText) => {
         },
       ],
       max_tokens: 1500,
-      temperature: 0.3,
+      temperature: 0.1,
     });
 
     const responseText = response.choices[0].message.content.trim();
