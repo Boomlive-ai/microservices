@@ -121,12 +121,30 @@ const optimizeFactcheckSeo = async (
   - Maintain a neutral yet slightly urgent tone, encouraging readers to understand the implications of misinformation.
 
 
-  Understand the language in which article content is and provide *all* content in the ${language} and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**.Respond with the JSON format:
+  Understand the language in which article content is and provide *all* content in the ${language} and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**,  Refer to Boomlive factcheck articles (https://www.boomlive.in/fact-check) for inspiration.Respond with the JSON format:
   
   {
     "Title": [
-      "Provide 3 of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets."
-    ],
+      "Provide 3 Boomlive-style titles (60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity. Use the following headline styles as a guide to create engaging, SEO-friendly options:",
+      
+      "- **Clear True or False Statements**: Directly address the claim and provide a clear answer. Example: ‘False: Modi Did Not Congratulate Trump with a Call About Bangladesh and Canada’",
+      
+      "- **Question-Based Headlines**: Pose the claim as a question to draw readers in. Example: ‘Did PM Modi Schedule a Call with Trump to Discuss Khalistani Terrorism? Here’s the Truth’",
+      
+      "- **Claim vs. Fact Format**: Separate the claim from the fact to establish a fact-check angle. Example: ‘Claim vs. Fact: India Today Anchor Reads Parody Modi Tweet on Trump’s Win’",
+      
+      "- **Debunking Style Headlines**: Use words like ‘Debunked’ or ‘Misleading’ to indicate a false claim. Example: ‘Debunked: Parody Tweet Misattributed to Modi on Trump’s Election Win’",
+      
+      "- **Social Media Angle**: Highlight claims that went viral on specific platforms. Example: ‘Viral on X: Fake Modi Tweet on Trump and Khalistani Terrorism Explained’",
+      
+      "- **Emphasizing the Misinformation Source**: Specify if the claim came from a parody or altered image. Example: ‘Parody Account Impersonates PM Modi: India Today Anchor Misreads Fake Tweet’",
+      
+      "- **Timely/Event-Based Headlines**: Connect the fact-check to recent events. Example: ‘Fact-Check: Did Modi Congratulate Trump with a Call on ‘Khalistani Terrorism’ After His 2024 Win?’",
+      
+      "- **Comparative Headlines**: Highlight the difference between fake and real content. Example: ‘Real vs. Fake: Modi’s Actual Congratulatory Tweet vs. Viral Parody Post’"
+      
+    ]
+
     "Description": [
       "Provide 3 concise, SEO-optimized descriptions in ${language} (160-180 characters each), starting with ${
         language === 'Hindi'
@@ -270,7 +288,20 @@ const optimizeExplainerSeo = async (
   const prompt = ` You are an SEO and content expert skilled in explainer writing, specifically for Boomlive.in. Analyze the following article and provide optimizations that emulate Boomlive’s tone, structure, and approach, prioritizing reader engagement and search engine visibility. Ensure your response captures the essence of Boomlive content while allowing for creative phrasing and should provide response in ${language} language.
   
   **Need to use these Focus Keywords or Sentences by default in all content generated**: ${focusKeywords}
-c
+  
+    **Examples of Boomlive Titles**:
+  - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
+  - "An AI Chatbot Is Being Blamed For A Teenager’s Suicide"
+  - "What Does Hamas Leader Yahya Sinwar's Death Mean For The Ongoing War?"
+  - "Reels to Rallies: New Report Reveals Influencers as Key Players in Political Narratives"
+  - "Explained: Who Exposed Data Of 3 Crore Star Health Customers?"
+  - "Why Are Experts Concerned About Airtel's New AI Spam Tool?"
+  - "Indian News Channels Give Communal Hue To Gruesome Bengaluru Murder"
+  - "Pager Attack On Hezbollah Is An Example Of A Booby Trap: What Does It Mean?"
+  - "How AI Images Fueled Pet-Eating Rumours About US Immigrants"
+  - "Ayushman Bharat To Cover All Citizens Over 70: How Will The Scheme Work?"
+  - "Australia Plans To Ban Social Media For Kids: Is It The Solution?"
+
   **Examples of Boomlive Descriptions**:
   - "Character.AI has previously made headlines for its AI personas. Recently, a US resident found a chatbot created in the likeness of his daughter, who was murdered in 2006, on the platform."
   - "Israel has described the death of 61-year-old Sinwar as one of the most significant strikes against Hamas since the war began following the group's attacks on October 7, 2023."
@@ -312,22 +343,31 @@ c
   Understand the language in which article content is and provide *all* content in the ${language}  and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**. Respond with the JSON format:
   {
     "Title": [
-      "Provide 3 Explainers title of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets.Refer examples above of boomlive explainers title, not it is not factcheck. refer boomlive.in explainer articles :- https://www.boomlive.in/explainers,  Eg:
+      "Provide 3 Explainers title of Boomlive-style titles only(60-70 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets. Refer to examples above and Boomlive explainer articles (https://www.boomlive.in/explainers) for inspiration. Notable headline styles for BoomLive include:
       
-  **Examples of Boomlive Titles**:
-  - "Digital Arrest: India’s New Con Artists Don't Hack Computers—They Hack Minds"
-  - "An AI Chatbot Is Being Blamed For A Teenager’s Suicide"
-  - "What Does Hamas Leader Yahya Sinwar's Death Mean For The Ongoing War?"
-  - "Reels to Rallies: New Report Reveals Influencers as Key Players in Political Narratives"
-  - "Explained: Who Exposed Data Of 3 Crore Star Health Customers?"
-  - "Why Are Experts Concerned About Airtel's New AI Spam Tool?"
-  - "Indian News Channels Give Communal Hue To Gruesome Bengaluru Murder"
-  - "Pager Attack On Hezbollah Is An Example Of A Booby Trap: What Does It Mean?"
-  - "How AI Images Fueled Pet-Eating Rumours About US Immigrants"
-  - "Ayushman Bharat To Cover All Citizens Over 70: How Will The Scheme Work?"
-  - "Australia Plans To Ban Social Media For Kids: Is It The Solution?"
-"
-    ],
+        1. **Question-Based Headlines**: Spark curiosity and invite readers to seek answers.
+          - Example: 'Is India’s Judiciary Truly Independent? Examining CJI Chandrachud’s Tenure'
+
+        2. **Fact-Driven Headlines**: Bold statements to attract quick information seekers.
+          - Example: 'Over 600 Judgements: How CJI Chandrachud’s Rulings Shaped Modern India'
+
+        3. **'How' and 'Why' Headlines**: Explain complex issues in an informative way.
+          - Example: 'How CJI Chandrachud’s Legacy Redefined Privacy and Women’s Rights in India'
+
+        4. **Subversive or Contrarian Headlines**: Challenge popular opinion or beliefs.
+          - Example: 'Why CJI Chandrachud’s Reforms May Not Be Enough to Modernize India’s Courts'
+
+        5. **List-Based Headlines**: Provide scannable, multiple insights.
+          - Example: '5 Landmark Judgements That Defined CJI Chandrachud’s Legacy'
+
+        6. **'What You Need to Know' Headlines**: Condense complex topics for essentials.
+          - Example: 'CJI Chandrachud’s Retirement: What You Need to Know About His Legacy'
+
+        7. **Descriptive Headlines with Emotional Impact**: Combine detail with emotive words.
+          - Example: 'The Unfulfilled Promise: Reflecting on CJI Chandrachud’s Complex Legacy'
+
+      Provide 3 Boomlive-style titles that reflect these styles, formatted for SEO engagement and relevance.",
+    ]
 
     "Description": [
       "Provide 3 concise, SEO-optimized descriptions in ${language} (160-180 characters each) that clarify the claim’s context or findings, following Boom's style of writing. Each description should be informative and engaging, similar to the following examples: \n\n- The story of APAAR reflects a broader tension in India's education system: the push for digital modernisation versus the need to address fundamental infrastructure and resource gaps. \n  https://www.boomlive.in/explainers/apaar-id-is-india-ready-for-a-national-digital-id-system-for-students-26908 \n\n- पॉलीग्राफ टेस्ट की सटीकता और कोर्ट में इसे सबूत के रूप में पेश किए जाने को लेकर हमेशा सवाल उठते आए हैं. \n  https://hindi.boomlive.in/explainers/kolkata-rape-murder-case-what-is-polygraph-test-on-sanjay-roy-26330 \n\n- এই অনুসন্ধান একটি বিব্রতকর ঘটনা তুলে ধরে যেখানে ভারতের এক যৌন নিপীড়ন ও হত্যার ভুক্তভোগীর ছবি কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে সম্পাদনা করা হয়েছে।"
@@ -335,15 +375,15 @@ c
 
     "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url, formatted with hyphens and reflecting Boomlive’s style.",
 
-    "Tags": "Generate 5-7 specific, SEO-optimized tags that reflect the core aspects of the article and align with Boomlive’s factual tone. Each tag should:
+    "Tags": "Generate 5-7 specific, SEO-optimized tags that reflect the core aspects of the article and align with Boomlive’s explainers tone. Each tag should:
 
-    - **Target User Intent**: Focus on keywords users search for when fact-checking political misinformation, especially related to Middle East politics and viral content analysis.
+    - **Target User Intent**: Focus on keywords users search for when  political misinformation, especially related to Middle East politics and viral content analysis.
       
     - **Prioritize Keywords**: Choose low-competition, high-volume keywords to enhance visibility in search engines.
       
     - **Highlight Specifics**: Include key figures, geographic regions, and the context of the misinformation, avoiding generic terms.
       
-    - **Reflect Trends**: Capture common terms and current trends in fact-checking and misinformation relevant to the article.
+    - **Reflect Trends**: Capture common terms and current trends in  misinformation relevant to the article.
 
     - **Example Structure**: Use phrases like 'Netanyahu Saudi blogger video', 'Middle East viral misinformation 2023', or '[specific person/region] viral claim'.
 
@@ -385,7 +425,7 @@ c
 
 - **Directly Address User Intent**: Tailor keywords to answer specific questions or concerns related to the article.
 - **Emphasize Niche Relevance**: Highlight particular aspects of the topic, avoiding overly broad keywords.
-- **Match Article Type**: Align keywords with the content style—whether fact-checking or explanatory—ensuring clarity and informative value.
+- **Match Article Type**: Align keywords with the content style—whether explanatory—ensuring clarity and informative value.
 - **Prioritize Search Volume**: Select keywords with high search volume for enhanced visibility.
 - **Format**: Provide in a comma-separated list."
 
