@@ -83,23 +83,58 @@ const analyzeSentiment = async (articleText) => {
 
 
 
-    const combinedPrompt = `Analyse the claim section in article and filter the original content from boom analysis it shouldnt consider any analysis performed by noom and analyze the following article from a user’s perspective, focusing exclusively on the claims made by the original sources cited within the article. Exclude any fact-check sections and do not consider the BOOM article itself as a source or target. Pay particular attention to the claims made by other organizations or posts on platforms such as Instagram, Twitter, Facebook, and YouTube mentioned within the claim section. Provide results in a structured JSON format.
+    const combinedPrompt = `Analyse the claim section in article and filter the original content from boom analysis it shouldnt consider any analysis performed by noom and analyze the following article from a target's perspective, focusing exclusively on the claims made by the original sources cited within the article. Exclude any fact-check sections and do not consider the BOOM article itself as a source or target. Pay particular attention to the claims made by other organizations or posts on platforms such as Instagram, Twitter, Facebook, and YouTube mentioned within the claim section. Provide results in a structured JSON format.
 Article content: ${boomAnalysisText}.
 Return the results in this JSON format and note if source of claim has same entity as targets it shouldn't add them as targets:
 {
   "target": {
-    "individuals": ["Name1-(sentiment-positive/negative/neutral) and why", "Name n-(sentiment-positive/negative/neutral)" or null],  // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
-  
-    "organizations": [null if value of sourceofclaim is similar  or "Only those who are not considered as sourceofclaims-(sentiment-positive/negative/neutral)  and why "], // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
-  
-    "communities": ["Community1-(sentiment-positive/negative/neutral)  and why", "Community n-(sentiment-positive/negative/neutral)" or null]  // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
-  
+      "individuals": [
+          {
+              "name": "Name1",
+              "sentiment": "positive/negative/neutral", // shouldn't consider negative only because it has some misinformation, it should see if that misinformation benefits or harms the individual target and should mark positive or negative respectively or neutral it doesnt affect and make it sure that llm model's randomness shouuld not change the sentiment next time.  
+              "justification": "Explanation of why this sentiment is assigned, based on how the claim affects the individual."
+          },
+          {
+              "name": "Name n",
+              "sentiment": "positive/negative/neutral", // shouldn't consider sentiment as negative only because it has some misinformation, it should see and analyze if that misinformation benefits or harms the individual target and should mark positive or negative respectively or neutral it doesnt affect and make it sure that llm model's randomness shouuld not change the sentiment next time.  
+              "justification": "Explanation of sentiment assignment from target perspective."
+          }
+          // Additional individuals as needed
+      ] || null,  // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
+
+      "organizations": [
+          {
+              "name": "Organization1",
+              "sentiment": "positive/negative/neutral",  // shouldn't consider sentiment as negative only because it has some misinformation, it should see and analyze if that misinformation benefits or harms the organization target and should mark positive or negative respectively or neutral it doesnt affect and make it sure that llm model's randomness shouuld not change the sentiment next time.  
+              "justification": "Explanation of why this sentiment is assigned, based on how the claim affects the organization."
+          },
+          {
+              "name": "Organization n",
+              "sentiment": "positive/negative/neutral", // shouldn't consider sentiment as negative only because it has some misinformation, it should see and analyze if that misinformation benefits or harms the organization target and should mark positive or negative respectively or neutral it doesnt affect and make it sure that llm model's randomness shouuld not change the sentiment next time.  
+              "justification": "Explanation of sentiment assignment from target perspective."
+          }
+          // Additional organizations as needed
+      ] || null, // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
+
+      "communities": [
+          {
+              "name": "Community1",
+              "sentiment": "positive/negative/neutral", // shouldn't consider sentiment as negative only because it has some misinformation, it should see and analyze if that misinformation benefits or harms the communitie target and should mark positive or negative respectively or neutral it doesnt affect and make it sure that llm model's randomness shouuld not change the sentiment next time.  
+              "justification": "Explanation of why this sentiment is assigned, based on how the claim affects the community."
+          },
+          {
+              "name": "Community n",
+              "sentiment": "positive/negative/neutral", , // shouldn't consider sentiment as negative only because it has some misinformation, it should see and analyze if that misinformation benefits or harms the communitie target and should mark positive or negative respectively or neutral it doesnt affect and make it sure that **llm model's randomness in providing response shouuld not change the sentiment next time**.  
+              "justification": "Explanation of sentiment assignment."
+          }
+          // Additional communities as needed
+      ] || null, // Targets of the Original Claims and sentiment from the perspective of target and if the claim benefits even if it is misinformation the target it should be positive else if harms the target it should be negative and if it doesnt bother the target it should be neutral
   },
 
   "sourceofclaim": "**list all the orginal sources who made the claims or spread several misinformation and from where boom did the analysis**",
   
   "sentiment": {
-    "classification": "Positive/Negative/Neutral", // Understand what overall boom analysis provide the sentiment and consider neutral if there's any confusion in overall anaysis
+    "classification": "Positive/Negative/Neutral", // Understand what overall targets sentiment. Provide the sentiment and consider sentiment as neutral if there's any confusion in overall anaysis like it shoulnt be baised to anyone and if one is negative and one is neutral the overall sentiment should be neutral
     "justification": "One Line Justification for the sentiment"
   },
   
@@ -110,17 +145,17 @@ Return the results in this JSON format and note if source of claim has same enti
 `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // gpt-4o or gpt-4o
+      model: "gpt-4o", // gpt-4o or gpt-4o // gpt-3.5-turbo
       messages: [
         {
           role: "system",
           content:
-            "You are an analyst focusing on user perspectives. Focus mainly on the claims made by original sources cited in the article, excluding BOOM's own claims and fact-checking conclusions. Provide concise results in JSON format.",
+            "You are an analyst. Focus mainly on the claims made by original sources cited in the article, excluding BOOM's own claims and fact-checking conclusions. Provide concise results in JSON format.",
         },
         { role: "user", content: combinedPrompt },
       ],
       max_tokens: 1000,
-      temperature: 0.1,
+      temperature: 0.2,
     });
 
     const responseText = response.choices[0].message.content.trim();
