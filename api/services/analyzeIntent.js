@@ -76,7 +76,7 @@ Analyze the provided article content for the presence of the following intents. 
 4. **Fraud/Scam**: False or deceptive information crafted to manipulate individuals into taking actions that benefit the perpetrator, often resulting in financial or personal losses for the victim. This category includes fake offers, impersonations, phishing schemes, or deceptive claims designed to gain sensitive information, money, or access to resources from the target.
 5. **Influence Operations**: Misleading content intentionally deployed by foreign or domestic actors to manipulate public opinion, shape perceptions, or destabilize socio-political landscapes in target countries. Such messages often appeal to divisive societal issues, aiming to influence opinions or erode trust in institutions.
 
-Return a JSON object containing:
+Return the response strictly as a JSON object only object containing:
 
 - An "Intent" array with identified intents.
 - An "Explanation" object with detailed explanations for each intent, structured as follows:
@@ -88,7 +88,7 @@ Eg:-
   "Smear Campaign": "It targets a specific individual with misleading claims."
 }
 }
-
+Only JSON data should be provided without additional explanations or code formatting.
 Content: ${articleContent}
 `;
 

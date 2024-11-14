@@ -238,7 +238,7 @@ const extractSentimentFromNews = async (req, res) => {
     const sentiment = await analyzeSentiment(articleText);
     const intent = await generateIntentForArticle(articleText);
 
-    console.log(intent);
+    // console.log(intent);
     res.status(200).json({ sentiment, intent }); // Send back the sentiment analysis
   } catch (error) {
     res.status(500).json({ error: error.message });
