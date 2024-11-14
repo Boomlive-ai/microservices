@@ -105,7 +105,7 @@ Content: ${articleContent}
               }
           ],
           max_tokens: 4096,
-          temperature: 0.3,
+          temperature: 0,
       });
 
       const responseText = response.choices[0].message.content.trim();
