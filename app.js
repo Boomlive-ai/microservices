@@ -4,6 +4,8 @@ const cors = require('cors');
 const { sendContactEmail } = require("./api/services/emailService");
 const { optimizeSeoUsingOpenAI} = require("./api/services/optimiseSeoUsingOpenai");
 const {  extractSentimentFromNews } = require("./api/services/analyzeNews"); // Import the summarizeNews function
+const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
+
 const fileUpload = require('express-fileupload');
 const app = express();
 const axios = require("axios");
@@ -53,10 +55,15 @@ app.post("/api/optimize-seo", async (req, res) => {
   }
 });
 
-// Analayze entiment
+// Analayze sentiment
 
 app.post("/api/sentiment", extractSentimentFromNews );
 
+
+
+// Summarize Article
+
+app.post("/api/summarize", summarizeNews);
 
 // Download drive file
 

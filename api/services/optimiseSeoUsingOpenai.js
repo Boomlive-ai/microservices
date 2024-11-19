@@ -127,7 +127,7 @@
     
     {
       "Title": [
-        "Provide 3 Boomlive-style titles (70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity. Use the following headline styles as a guide to create engaging, SEO-friendly options:",
+        "Provide 5 Boomlive-style titles (70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity. Use the following headline styles as a guide to create engaging, SEO-friendly options:",
         
         "- **Clear True or False Statements**: Directly address the claim and provide a clear answer. Example: ‘False: Modi Did Not Congratulate Trump with a Call About Bangladesh and Canada’",
         
@@ -148,7 +148,7 @@
       ]
 
       "Description": [
-        "Provide 3 concise, SEO-optimized descriptions in ${language} (160-180 characters each), starting with ${
+        "Provide 5 concise, SEO-optimized descriptions in ${language} (with minimum 160-180 characters each), starting with ${
           language === 'Hindi'
             ? 'बूम ने पाया...'
             : language === 'Bangla'
@@ -157,7 +157,7 @@
         } to clarify the claim’s context or finding. Consider article is in ${language}."
       ],
 
-      "Suggested URL": "Suggest a URL directly relevant to the article, formatted with hyphens and reflecting Boomlive’s style.",
+      "Suggested URL": "Suggest a URL directly relevant to the article, formatted with hyphens and reflecting Boomlive’s style.With Minimum 80 - 100 characters",
 
       "Tags": "Generate 5-7 specific, SEO-optimized tags that reflect the core aspects of the article and align with Boomlive’s factual tone. Each tag should:
 
@@ -173,21 +173,21 @@
 
       Provide the tags in a comma-separated list in ${language}.",
 
-      "Meta Title": "Create a meta title under 60 characters, combining primary keywords in both English and ${language}, as users often search in a mix of English-${language}. For example, ${
+      "Meta Title": ["Provide 5 meta titles. Create a meta title under 60 characters, combining primary keywords in both English and ${language}, as users often search in a mix of English-${language}. For example, ${
         language === "hindi"
           ? "‘PM Modi और COVID Vaccine पर भ्रामक दावा’"
           : language === "bangla"
           ? "PM মোদী ভুয়া খবর যাচাই"
           : "‘Prime Minister Modi Responds to Viral Image Claims,’ ‘Truth Behind Prayagraj Viral Photo’"
-      }. Ensure the title is clear, relevant, and uses primary keywords effectively for SEO."
+      }. Ensure the title is clear, relevant, and uses primary keywords effectively for SEO."]
 
-      "Meta Description": "Create a meta description under 155 characters that summarizes the fact-check analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. For example, ${
+      "Meta Description": ["Provide 5 meta description. Create a meta description with minimum 155 characters that summarizes the fact-check analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. For example, ${
         language === "hindi"
           ? "‘BOOM ने भ्रामक दावे का सच बताया – Prayagraj में वायरल तस्वीर की हकीकत’"
           : language === "bangla"
           ? "‘BOOM জানায় বিভ্রান্তিকর দাবির সত্যতা – Prayagraj ভাইরাল ছবির আসল সত্য’"
           : "‘BOOM clarifies misleading claim – truth behind viral Prayagraj image’"
-      }. Ensure this summary captures the main findings in an SEO-friendly format."
+      }. Ensure this summary captures the main findings in an SEO-friendly format."]
 
       "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
       "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
@@ -239,7 +239,7 @@
         "Step n: Continue for all verification steps."
       ]
     }
-    
+    -Title ,Description, Meta Title and Meta Decription should be relevant and shoud compulsarily add focus keywords
     Only provide the output in the language in which article content is written(English, Hindi, Bangla) in JSON format as specified in the language in which article content is written in written(English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.**Note Meta Title, Meta Description, Keywords (Short Tail) and Keywords (Long Tail) should include English words which are searched by users with the language in ${
       language === "hindi"
         ? "Hinglish (Hindi and English mix)"
@@ -345,7 +345,7 @@
     Understand the language in which article content is and provide *all* content in the ${language}  and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**. Respond with the JSON format:
     {
       "Title": [
-        "Provide 3 Explainers title of Boomlive-style titles only(70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets. Refer to examples above and Boomlive explainer articles (https://www.boomlive.in/explainers) for inspiration. Notable headline styles for BoomLive include:
+        "Provide 5 Explainers title of Boomlive-style titles only(70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets. Refer to examples above and Boomlive explainer articles (https://www.boomlive.in/explainers) for inspiration. Notable headline styles for BoomLive include:
         
           1. **Question-Based Headlines**: Spark curiosity and invite readers to seek answers.
             - Example: 'Is India’s Judiciary Truly Independent? Examining CJI Chandrachud’s Tenure'
@@ -372,10 +372,10 @@
       ]
 
       "Description": [
-        "Provide 3 concise, SEO-optimized descriptions in ${language} (160-180 characters each) that clarify the claim’s context or findings, following Boom's style of writing. Each description should be informative and engaging, similar to the following examples: \n\n- The story of APAAR reflects a broader tension in India's education system: the push for digital modernisation versus the need to address fundamental infrastructure and resource gaps. \n  https://www.boomlive.in/explainers/apaar-id-is-india-ready-for-a-national-digital-id-system-for-students-26908 \n\n- पॉलीग्राफ टेस्ट की सटीकता और कोर्ट में इसे सबूत के रूप में पेश किए जाने को लेकर हमेशा सवाल उठते आए हैं. \n  https://hindi.boomlive.in/explainers/kolkata-rape-murder-case-what-is-polygraph-test-on-sanjay-roy-26330 \n\n- এই অনুসন্ধান একটি বিব্রতকর ঘটনা তুলে ধরে যেখানে ভারতের এক যৌন নিপীড়ন ও হত্যার ভুক্তভোগীর ছবি কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে সম্পাদনা করা হয়েছে।"
+        "Provide 5 concise, SEO-optimized descriptions in ${language} (with minimum 160-180 characters each) that clarify the claim’s context or findings, following Boom's style of writing. Each description should be informative and engaging, similar to the following examples: \n\n- The story of APAAR reflects a broader tension in India's education system: the push for digital modernisation versus the need to address fundamental infrastructure and resource gaps. \n  https://www.boomlive.in/explainers/apaar-id-is-india-ready-for-a-national-digital-id-system-for-students-26908 \n\n- पॉलीग्राफ टेस्ट की सटीकता और कोर्ट में इसे सबूत के रूप में पेश किए जाने को लेकर हमेशा सवाल उठते आए हैं. \n  https://hindi.boomlive.in/explainers/kolkata-rape-murder-case-what-is-polygraph-test-on-sanjay-roy-26330 \n\n- এই অনুসন্ধান একটি বিব্রতকর ঘটনা তুলে ধরে যেখানে ভারতের এক যৌন নিপীড়ন ও হত্যার ভুক্তভোগীর ছবি কৃত্রিম বুদ্ধিমত্তা ব্যবহার করে সম্পাদনা করা হয়েছে।"
       ]
 
-      "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url, formatted with hyphens and reflecting Boomlive’s style.",
+      "Suggested URL": "A URL that includes main keywords both (long tail and short tail), main keywords from title and relevant tags to get more seo firendly url, formatted with hyphens and reflecting Boomlive’s style.With Minimum 80 - 100 characters",
 
       "Tags": "Generate 5-7 specific, SEO-optimized tags that reflect the core aspects of the article and align with Boomlive’s explainers tone. Each tag should:
 
@@ -391,15 +391,15 @@
 
       Provide the tags in a comma-separated list in ${language}.",
 
-      "Meta Title": "Use a meta title under 60 characters, combining primary keywords in English and ${language} language , as users often search in a mix of English-${language}. Examples include: ${
+      "Meta Title": ["Provide 5 meta titles. Use a meta title under 60 characters, combining primary keywords in English and ${language} language , as users often search in a mix of English-${language}. Examples include: ${
         language === "hindi"
           ? " COVID Vaccine पर मिथ্যাচার"
           : language === "bangla"
           ? "'Durga Puja নিয়ে Viral ভিডিও: সত্যি কি?', 'PM মোদী Fake News নিয়ে জানিয়েছেন গুরুত্বপূর্ণ তথ্য'"
           : "Prime Minister Modi Responds to AI-Generated Photo, COVID Myths Explained"
-      }. Provide a meta title under 60 characters using primary keywords.",
+      }. Provide a meta title under 60 characters using primary keywords."],
 
-      "Meta Description": "Create a meta description under 155 characters that summarizes the explainer analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. Ensure this summary captures the main findings in an SEO-friendly format.",
+      "Meta Description": ["Provide 5 meta description. Create a meta description with minimum 155 characters that summarizes the explainer analysis in Boomlive’s style. For articles in ${language} , use a combination of ${language} and English , as users often search in a mix of English-${language}. Ensure this summary captures the main findings in an SEO-friendly format."],
 
       "Sub Headings (H2)": ["Provide 4-6 SEO-optimized H2 subheadings in Boomlive's clear style, suitable for Google snippets."],
       "Sub Headings (H3)": ["Provide 4-6 H3 subheadings that support SEO structure in Boomlive’s tone."],
@@ -436,7 +436,7 @@
             "Summary": ["Provide a 5-point summary capturing key points in Boomlive's clear style, with each point in one sentence."]
           },
     }
-          
+    -Title ,Description, Meta Title and Meta Decription should be relevant and shoud compulsarily add focus keywords
     Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which content is written orignally (English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
     `;
 
