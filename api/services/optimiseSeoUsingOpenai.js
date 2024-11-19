@@ -127,7 +127,7 @@
     
     {
       "Title": [
-        "Provide 5 Boomlive-style titles (70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity. Use the following headline styles as a guide to create engaging, SEO-friendly options:",
+        "Provide minimum 5 Boomlive-style titles (70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity. Use the following headline styles as a guide to create engaging, SEO-friendly options:",
         
         "- **Clear True or False Statements**: Directly address the claim and provide a clear answer. Example: ‘False: Modi Did Not Congratulate Trump with a Call About Bangladesh and Canada’",
         
@@ -345,7 +345,7 @@
     Understand the language in which article content is and provide *all* content in the ${language}  and **make sure to include these focus keywords or focus sentences in the content ${focusKeywords}**. Respond with the JSON format:
     {
       "Title": [
-        "Provide 5 Explainers title of Boomlive-style titles only(70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets. Refer to examples above and Boomlive explainer articles (https://www.boomlive.in/explainers) for inspiration. Notable headline styles for BoomLive include:
+        "Provide minimum 5 Explainers title of Boomlive-style titles only(70-80 characters each) that vary in phrasing but maintain Boomlive’s authoritative tone, capturing the nature of the claim and its validity and the main targets. Refer to examples above and Boomlive explainer articles (https://www.boomlive.in/explainers) for inspiration. Notable headline styles for BoomLive include:
         
           1. **Question-Based Headlines**: Spark curiosity and invite readers to seek answers.
             - Example: 'Is India’s Judiciary Truly Independent? Examining CJI Chandrachud’s Tenure'
