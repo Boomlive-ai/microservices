@@ -247,6 +247,8 @@
         ? "Bangla-English"
         : "English"
     }**
+
+    -**Strictly Generate a json format response**
     `;
 
     try {
@@ -438,6 +440,7 @@
     }
     -Title ,Description, Meta Title and Meta Decription should be relevant and shoud compulsarily add focus keywords
     Only provide the output in the language in which article content is wrriten(English, Hindi, Bangla) in JSON format as specified in the language in which content is written orignally (English, Hindi, Bangla) without additional text or commentary. The content should closely mirror Boomlive’s style, ensuring clarity, engagement, and informative accuracy.
+    -**Strictly Generate a json format response**
     `;
 
     try {
