@@ -3,7 +3,7 @@ require("dotenv").config();
 const cors = require('cors');
 const { sendContactEmail } = require("./api/services/emailService");
 const { optimizeSeoUsingOpenAI} = require("./api/services/optimiseSeoUsingOpenai");
-const {  extractSentimentFromNews } = require("./api/services/analyzeNews"); // Import the summarizeNews function
+const {  extractSentimentFromNews, extractSentimentFromNews2 } = require("./api/services/analyzeNews"); // Import the summarizeNews function
 const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 
 const fileUpload = require('express-fileupload');
@@ -59,6 +59,11 @@ app.post("/api/optimize-seo", async (req, res) => {
 
 app.post("/api/sentiment", extractSentimentFromNews );
 
+
+
+// Analyze sentiment 2
+
+app.post("/api/sentiment2", extractSentimentFromNews2)
 
 
 // Summarize Article
