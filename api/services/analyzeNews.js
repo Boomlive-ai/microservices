@@ -192,12 +192,12 @@ Your response must be strictly in valid JSON format without any additional text,
       "justification": "Reason for sentiment classification"
     }
   ],
-  "Target2": "Additional affected targets, if any",
   "Sentiment": {
     "classification": "Positive/Negative/Neutral",
     "justification": "One-line justification for the overall sentiment classification"
   },
   "Theme/Topic": "Theme/Topic based on article", // e.g., AI manipulation in politics, Banks, Bangladesh elections, Bharat Jodo Yatra, Cinema, Delhi Road rage, Davos 2023 WEF, Epstein case, Hamas-Israel conflict, Impersonation, International politics, Islamophobia, Israel-Palestine War, Japan Earthquake, Japan tsunami, Lok Sabha elections 2024, Maldives-Lakshadweep Row, Manipur ethnic clashes 2024, Mis, Online scam, Political conduct, Political addressal, Public conduct, Public leader praise, Ram Mandir communal clashes, Ram Mandir Inaugration, Rajasthan Politics, Robot in Sports, Smriti Irani's Saudi visit, Sports, Violence on Minors, Wall collapse Uttar Pradesh
+  "Theme2": "Theme2 Based on Article",
   "Purpose/Intent": "Purpose or intent behind the claim (e.g., Demographic anxiety, Fake Sensationalism, Financial deception, Gendered attack, Islamophobia, Scam, Satire, Smear Campaign)",
   "Type": "Type of claim (e.g., False content, False context, Fabricated content, Manipulated content, Misleading content.)",
   "Tags": ["Tag1", "Tag2"], // Keywords or tags related to the article
