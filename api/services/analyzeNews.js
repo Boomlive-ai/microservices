@@ -205,7 +205,7 @@ Your response must be strictly in valid JSON format without any additional text,
   "ClaimedOn": "Claimed on what social media platform",
   "AI": "What type of AI Content was used generating the claim if it was used?(Eg: Deepfake)",
   "OldContent": "Whether the claim is based on outdated content or old content",
-  "VerifiedUser": "Indicates if the claim came from a verified user",
+  "VerifiedUser": "Indicates if the claim came from a verified user , if there are verified users please provide the count of nummber of verified users or it should provide 0",
   "Violent/Graphic/Inappropriate": "Indicates if the claim involves graphic or inappropriate content"
 }
 
