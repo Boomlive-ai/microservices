@@ -1,8 +1,6 @@
 const axios = require("axios");
 const { load } = require("cheerio");
 const { OpenAI } = require("openai"); // Import OpenAI
-const { GoogleGenerativeAI } = require("@google/generative-ai"); // Importing the Google Generative AI library
-const { response } = require("../../app");
 
 require("dotenv").config();
 

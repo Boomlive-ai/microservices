@@ -3,6 +3,7 @@ require("dotenv").config();
 const cors = require('cors');
 const { sendContactEmail } = require("./api/services/emailService");
 const { optimizeSeoUsingOpenAI} = require("./api/services/optimiseSeoUsingOpenai");
+const { seoablityRes } = require("./api/services/seoScoreChecker");
 const {  extractSentimentFromNews, extractSentimentFromNews2 } = require("./api/services/analyzeNews"); // Import the summarizeNews function
 const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 
@@ -69,6 +70,12 @@ app.post("/api/sentiment2", extractSentimentFromNews2)
 // Summarize Article
 
 app.post("/api/summarize", summarizeNews);
+
+
+
+// SeoScoreChecker
+
+app.post("/api/seoability", seoablityRes)
 
 // Download drive file
 
