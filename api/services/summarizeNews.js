@@ -2,6 +2,7 @@ const axios = require("axios");
 const { load } = require("cheerio");
 const { OpenAI } = require("openai"); // Import OpenAI
 const { GoogleGenerativeAI } = require("@google/generative-ai"); // Importing the Google Generative AI library
+const { response } = require("../../app");
 
 require("dotenv").config();
 
@@ -37,11 +38,20 @@ const fetchArticleContent = async (url) => {
   }
 };
 
-const summarizeArticle = async (articleText) => {
+const summarizeArticle = async (articleText, responseLimit) => {
   try {
+
+    console.log(responseLimit);
+    
     const prompt = `
-Summarize the following article. The summary should capture the main points and key details in a concise format:
-Article: ${articleText}`;
+Summarize the following article in bullet points in a array. The summary should capture the main points and key details in a concise format in ${responseLimit} lines only:
+Article: ${articleText}
+Strictly provide response in json format:
+
+    Eg: {
+          "summary": ["summary point 1", "summary point 2",.....,"summary point n"]
+        }
+`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o", // or use "gpt-3.5-turbo" for a faster, cost-effective option
@@ -59,8 +69,12 @@ Article: ${articleText}`;
       temperature: 0, // Set to 0 for a more deterministic response
     });
 
-    const summary = response.choices[0].message.content.trim();
-    return summary;
+    const responseText = response.choices[0].message.content.trim();
+    const cleanedText = responseText.replace(/```json\n|\n```/g, "");
+
+    console.log(cleanedText);
+    
+    return JSON.parse(cleanedText);
   } catch (error) {
     console.error("Error summarizing article:", error);
     throw new Error("Error summarizing article");
@@ -73,8 +87,8 @@ Article: ${articleText}`;
 
 
 const summarizeNews = async (req, res) => {
-  const { url, text } = req.body; // Expecting URL and text in the request body
-
+  const { url, text,  responseLimit} = req.body; // Expecting URL and text in the request body
+  
   // Check if both URL and text are empty
   if (!url && !text) {
     return res.status(400).json({ error: "Either URL or text is required" });
@@ -92,8 +106,11 @@ const summarizeNews = async (req, res) => {
       articleText = await fetchArticleContent(url);
     }
     // Summarize the article text using the Google Generative AI
-    const summary = await summarizeArticle(articleText);
-    res.status(200).json({ summary }); // Send back the sentiment analysis
+    const summary = await summarizeArticle(articleText, responseLimit);
+
+    console.log(summary);
+    
+    res.status(200).json({ response: summary }); // Send back the sentiment analysis
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
