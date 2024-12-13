@@ -82,6 +82,10 @@ const extractContentFromArticle = async (req, res) => {
   }
 };
 
+
+
+
+
 module.exports = {
   extractContentFromArticle,
 };

@@ -4,7 +4,7 @@ const cors = require('cors');
 const { sendContactEmail } = require("./api/services/emailService");
 const { optimizeSeoUsingOpenAI} = require("./api/services/optimiseSeoUsingOpenai");
 const { seoablityRes } = require("./api/services/seoScoreChecker");
-const {  extractSentimentFromNews, extractSentimentFromNews2 } = require("./api/services/analyzeNews"); // Import the summarizeNews function
+const {  extractSentimentFromNews, extractSentimentFromNews2, generateSchemaFromArticle } = require("./api/services/analyzeNews"); // Import the summarizeNews function
 const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 const {  extractContentFromArticle } = require("./api/services/extractSectionsFromArticleUrl"); // Import the summarizeNews function
 
@@ -83,6 +83,13 @@ app.post("/api/seoability", seoablityRes)
 // Extract Content From Article
 
 app.post("/api/extractArticleContent",extractContentFromArticle )
+
+
+
+// Generate Schema from Article
+
+app.post("/api/generateSchema", generateSchemaFromArticle)
+
 app.get('/download-file', async (req, res) => {
   const { fileId } = req.query; // Get the fileId from the query parameter
   const url = `https://drive.google.com/uc?export=download&id=${fileId}`;

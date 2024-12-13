@@ -34,7 +34,7 @@ const seoScoreChecker = async (articleText, focusKeywords, articleData) => {
       // Keyword density calculation
       const keywordDensity = focusKeywordsArray.reduce((acc, keyword) => {
         const keywordCount = (articleText.match(new RegExp(`\\b${keyword}\\b`, 'gi')) || []).length;
-        acc[keyword] = ((keywordCount / wordCount) * 100).toFixed(2); // Calculate as percentage
+        acc[keyword] = ((keywordCount / wordCount) * 100).toFixed(2);
         return acc;
       }, {});
   
@@ -55,9 +55,10 @@ const seoScoreChecker = async (articleText, focusKeywords, articleData) => {
       Headers: ${headerAnalysis.h1 ? headerAnalysis.h1.join(", ") : ""}, ${headerAnalysis.h2 ? headerAnalysis.h2.join(", ") : ""}, ${headerAnalysis.h3 ? headerAnalysis.h3.join(", ") : ""}
       Internal Links: ${internalLinks.length}
       Meta Description Optimized: ${isMetaDescriptionOptimized ? "Yes" : "No"}
-    
+      Keyword Density: ${keywordDensity}
+
       Return a JSON response with these fields:
-      - keywordDensity (percentage for each focus keyword)
+      - keywordDensity (percentage for each focus keyword) eg:- ${keywordDensity}
       - readabilityScore (0-100 scale)
       - headerAnalysis (list of H1, H2, etc.)
       - metaAnalysis (title length, meta description length)

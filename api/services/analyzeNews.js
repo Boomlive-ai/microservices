@@ -3,6 +3,7 @@ const { load } = require("cheerio");
 const { OpenAI } = require("openai"); // Import OpenAI
 const { GoogleGenerativeAI } = require("@google/generative-ai"); // Importing the Google Generative AI library
 const { generateIntentForArticle } = require("../services/analyzeIntent"); // Import the summarizeNews function
+const { extracFactCheckSchema } = require("../utils/utils"); // Import the summarizeNews function
 
 require("dotenv").config();
 
@@ -443,8 +444,166 @@ const summarizeNews = async (req, res) => {
   }
 };
 
+// ##################################################################################
+const generateFactCheckSchemaFromArticle = async (articleContent, articleInfo, url) => {
+  let iptcMediaTopic = "https://www.iptc.org/std/NewsCodes/treeview/mediatopic/mediatopic-en-GB.html";
+  console.log("Generating schema for this content: ", articleContent);
+  console.log(articleInfo.socialMediaLinks);
+  
+  try {
+    const prompt = `
+You are tasked with analyzing the provided article content and filling a fact-checking schema. The schema is divided into five sections, each containing specific fields to be analyzed. Use the definitions and examples to guide your analysis.
+
+Return the output strictly in JSON format. Follow this schema structure:
+
+{
+  "GeneralData": {
+    "ClaimReviewed": "${articleInfo.claim}", // Keep under 75 characters to minimize wrapping on mobile devices.
+    "Context": "provide brief and very short context possible for this context: ${articleInfo.context}", // Describe the circumstances or setting in which the claim was made.
+    "Summary": "A one-sentence conclusion of the article or verdict from the fact-check.Use concise, factual language.Eg:- 'This video is actually of a Syrian girl having an epileptic fit, likely in Lebanon'.",
+    "PublishingDate": "Use the format DD/MM/YYYY.${articleInfo.publicationDate}",
+    "Author": "${articleInfo.authors}",
+    "FactCheckURL": "${url}",
+    "SightingDate": "When the claim was first published (DD/MM/YYYY).",
+    "TopicOfClaim": "The IPTC Media Topic category that best matches the claim (e.g., 'crime, law and justice'), you can refer this link ${iptcMediaTopic} for this claim: ${articleInfo.claim}",
+    "CommissionedByThirdParty": "Yes/No"
+  },
+  "ClaimSourcesFormats": {
+    "SourceChannel": ["Social Media Platform", "TV Channel", "Radio", "Newspaper", "Other"],
+    ("Social Media Platform"|| "TV Channel" || "Radio" || "Newspaper" || "Other"): "Name specific channel or Platform where the claim was made"
+    "DiffusionFormat": "Select all that apply: Text, Video, Meme, Audio.",
+    "Appearance": ${articleInfo.socialMediaLinks} or [], // only keep those urls which are relevant for content and dont provide links which are not working
+    "MentionedCountry": ["Country1", "Country2"]
+  },
+  "ClaimantData": {
+    "Claimant": "Person or organization authoring the claim.${articleInfo.claimedBy}",
+    "ClaimantType": "Person/Organization",
+    "ClaimantEntity": "${articleInfo.claimUserWikiLink}",
+    "ClaimantInfluence": "High/Medium/Low",
+    "ClaimantOrganization": "Affiliation of the claimant.",
+    "ClaimReach": "High/Medium/Low"
+  },
+  "BreakoutDistortionHarm": {
+    "BreakoutScale": "1 to 6 (extent of claim's spread)",
+    "DegreeOfDistortion": "True/False/Misleading/Lack of Evidence",
+    "TypeOfDistortion": ["Satire", "Fabricated", "Imposter Content"],
+    "FactorsDrivingDistribution": ["Political", "Financial"],
+    "BroaderIssue": "Contextual event or debate.",
+    "BroaderIssueEntity": "${articleInfo.broaderIssueWiki} if not there NA",
+    "Harm": "Whether the claim poses potential harm to health, democracy, or rule of law. Does the claim potentially impact individual or public physical or mental health? Does the claim potentially harm values of democracy and rule of law? Yes/No",
+    "HarmEscalation": "The potential for a claim to lead to tangible consequences for individuals, groups, or broader societal entities. It categorizes the likelihood of escalation based on the claim's reach, credibility, and content.
+    1 (unlikely) to 5 (definite escalation) Evaluate whether the claim is likely to escalate or lead to direct consequences based on its content, dissemination, and audience. Choose from options 1 to 5 1 - definitely won't escalate 2 - unlikely to escalate 3 - plausibly could escalate 4 - context suggests escalation likely 5 -definitely will escalate",
+    "PotentialConsequences": ["International Relations", "Public Health"],
+    "LifespanOfClaim": "Days/Weeks/Months"
+  },
+  "AIContentEvidence": {
+    "AIGeneratedClaims": "Yes/No",
+    "AIVerificationMethod": ["Watermark", "Detection Tool", "Context Analysis"],
+    "TypeOfEvidenceProvided": ["Government Data", "Expert Consultation"],
+    "QAAndEvidence": [
+      {
+        "Question": "Question text",
+        "Answer": "Answer text",
+        "Evidence": "URL or citation"
+      }
+    ]
+  }
+}
+
+Analyze the following content and populate the schema:
+Content: ${url}
+`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o", // Use an appropriate model
+      messages: [
+        {
+          role: "system",
+          content: "You are a fact-checking assistant tasked with generating structured data schemas based on article content."
+        },
+        {
+          role: "user",
+          content: prompt,
+        }
+      ],
+      max_tokens: 4096,
+      temperature: 0,
+    });
+
+    const responseText = response.choices[0].message.content.trim();
+    console.log(responseText);
+    const cleanedText = responseText.replace(/```json\n|\n```/g, "");
+    return JSON.parse(cleanedText);
+  } catch (error) {
+    console.error("Error generating schema:", error);
+    return null;
+  }
+};
+
+
+const generateSchemaFromArticle = async (req, res) => {
+  const { url, text } = req.body;
+
+  // Check if both URL and text are empty
+  if (!url && !text) {
+    return res.status(400).json({ error: "Either URL or text is required" });
+  }
+
+  try {
+    let articleInfo;
+    let articleText;
+    let claimReview;
+    let context;
+    let publicationDate;
+    let authors;
+    let factCheckURL;
+    let claimedBy;
+    let claimedByInfo;
+    let socialMediaLinks;
+    let isClaimCorrect;
+    let claimUserWikiLink;
+    // If text is provided, use it directly
+    if (text) {
+      articleText = text;
+    }
+    // If URL is provided, fetch the article content
+    else if (url) {
+      articleText = await fetchArticleContent(url);
+      articleInfo =  await extracFactCheckSchema(url);
+      context = articleInfo.context;
+      publicationDate = articleInfo.publicationDate;
+      claimReview = articleInfo.claim;
+      authors = articleInfo.authors;
+      factCheckURL = url;
+      // ############################################
+      claimedBy = articleInfo.claimedBy;
+      claimedByInfo = articleInfo.claimedByInfo;
+      socialMediaLinks = articleInfo.socialMediaLinks;
+      isClaimCorrect = articleInfo.factCheck;
+      claimUserWikiLink = articleInfo.claimUserWikiLink;
+    } 
+    // console.log(
+    //   "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4"
+    // );
+
+    // console.log(articleText);
+    // console.log(
+    //   "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4"
+    // );
+    const section1 = { claimReview, context, publicationDate, authors,factCheckURL}
+    const section2 = {claimedBy, socialMediaLinks}
+    const section3 = { claimedByInfo, claimedBy,claimUserWikiLink }
+    const schema = await generateFactCheckSchemaFromArticle(articleText,articleInfo, url);
+    // console.log(intent);
+    res.status(200).json({ schema }); // Send back the sentiment analysis
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   summarizeNews,
   extractSentimentFromNews,
   extractSentimentFromNews2,
+  generateSchemaFromArticle
 };
