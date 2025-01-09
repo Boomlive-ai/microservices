@@ -109,6 +109,13 @@ app.get('/download-file', async (req, res) => {
   }
 });
 
+
+// API to get User-Agent
+app.get('/user-agent', (req, res) => {
+  const userAgent = req.headers['user-agent'];
+  res.json({ userAgent });
+});
+
 // A fallback route to handle any other GET requests
 app.get('*', (req, res) => {
   res.status(200).json({ message: 'Hello' });
