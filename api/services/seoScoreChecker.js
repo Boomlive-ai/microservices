@@ -69,7 +69,7 @@ const seoScoreChecker = async (articleText, focusKeywords, articleData) => {
       Example of default json format on generating response:
     
       {
-        "keywordDensity": { "keyword1": 0, "keyword2": 0 },  // Percentage of each keyword's usage
+        "keywordDensity": { "keyword1": Y %, "keyword2": X % },  // Percentage of each keyword's usage
         "readabilityScore": 0-100,  // Readability score
         "headerAnalysis": {
             "h1": {
