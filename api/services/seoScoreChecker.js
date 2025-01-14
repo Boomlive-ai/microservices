@@ -34,7 +34,7 @@ const seoScoreChecker = async (articleText, focusKeywords, articleData) => {
       // Keyword density calculation
       const keywordDensity = focusKeywordsArray.reduce((acc, keyword) => {
         const keywordCount = (articleText.match(new RegExp(`\\b${keyword}\\b`, 'gi')) || []).length;
-        acc[keyword] = ((keywordCount / wordCount) * 100).toFixed(2);
+        acc[keyword] = `${((keywordCount / wordCount) * 100).toFixed(2)}%`;
         return acc;
       }, {});
   
@@ -69,7 +69,7 @@ const seoScoreChecker = async (articleText, focusKeywords, articleData) => {
       Example of default json format on generating response:
     
       {
-        "keywordDensity": { "keyword1": Y %, "keyword2": X % },  // Percentage of each keyword's usage
+        "keywordDensity": { "keyword1": X%, "keyword2": X% },  // Percentage of each keyword's usage in % and pass it as a string
         "readabilityScore": 0-100,  // Readability score
         "headerAnalysis": {
             "h1": {
