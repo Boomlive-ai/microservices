@@ -48,7 +48,6 @@ const getWikipediaLink = async (title) => {
   }
 };
 
-
 const extractArticleData = async (url) => {
   try {
     const response = await axios.get(url);
@@ -58,7 +57,7 @@ const extractArticleData = async (url) => {
     // Extract title and meta description (important for SEO)
     const title = $("title").text() || "";
     const metaDescription = $("meta[name='description']").attr("content") || "";
-    
+
     // Extract all headers for SEO analysis (H1, H2, H3, etc.)
     let headers = [];
     $("h1, h2, h3, h4, h5, h6").each((index, element) => {
@@ -87,22 +86,41 @@ const extractArticleData = async (url) => {
       }
     });
 
+    // Extract image alt text and title attributes
+    let images = [];
+    $(".article-container img").each((index, element) => {
+      // Use 'data-src' if it exists, otherwise fall back to 'src'
+      const src = $(element).attr("data-src") || $(element).attr("src") || "";
+      const alt = $(element).attr("alt") || "No alt text";
+      const imgTitle = $(element).attr("title") || "No title";
+      
+      images.push({ src, alt, title: imgTitle });
+    });
+    
+    console.log(images);
+
     // Clean up the articleText (optional: normalize whitespace, remove non-relevant text, etc.)
     articleText = articleText.trim().replace(/\s+/g, ' '); // Normalize spaces
+    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    console.log(images);
+    
+    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
     // Return the cleaned article text and additional SEO-related data
     return {
-      articleText: articleText,  // Cleaned text for content analysis
-      title: title,              // Page title for meta analysis
-      metaDescription: metaDescription,  // Meta description for SEO analysis
-      headers: headers,          // List of headers (important for SEO)
-      internalLinks: internalLinks // List of internal links
+      articleText,       // Cleaned text for content analysis
+      title,             // Page title for meta analysis
+      metaDescription,   // Meta description for SEO analysis
+      headers,           // List of headers (important for SEO)
+      internalLinks,     // List of internal links
+      images             // List of images with src, alt text, and title
     };
   } catch (error) {
     console.error("Error fetching article:", error);
     throw new Error("Error fetching article content");
   }
 };
+
 
 
 const fetchArticleContent = async (url) => {
