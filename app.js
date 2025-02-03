@@ -7,6 +7,7 @@ const { seoablityRes } = require("./api/services/seoScoreChecker");
 const {  extractSentimentFromNews, extractSentimentFromNews2, generateSchemaFromArticle } = require("./api/services/analyzeNews"); // Import the summarizeNews function
 const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 const {  extractContentFromArticle } = require("./api/services/extractSectionsFromArticleUrl"); // Import the summarizeNews function
+const {  fetchLinks } = require("./api/services/dynamicLinks"); // Import the summarizeNews function
 
 const fileUpload = require('express-fileupload');
 const app = express();
@@ -116,9 +117,13 @@ app.get('/user-agent', (req, res) => {
   res.json({ userAgent });
 });
 
+
+// Dynamic Link for The core
+app.get('/fetch-links/:id', fetchLinks);
+
 // A fallback route to handle any other GET requests
 app.get('*', (req, res) => {
-  res.status(200).json({ message: 'Hello' });
+  res.status(200).json({ message: 'Helldo' });
 });
 
 module.exports = app;
