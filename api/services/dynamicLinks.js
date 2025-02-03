@@ -24,7 +24,7 @@ const fetchLinks = async (req, res) => {
         link = response.data.links.youtube;
       }
   
-      res.status(200).json({ link }); // Return the appropriate link based on the user agent
+      res.redirect(link); // Return the appropriate link based on the user agent
     } catch (error) {
       console.error('Error fetching links:', error);
       res.status(500).json({ error: error.message });
