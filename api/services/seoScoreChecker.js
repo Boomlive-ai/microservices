@@ -234,8 +234,8 @@ const seoScoreChecker = async (articleText, focusKeywords, articleData) => {
 
     return JSON.parse(cleanedText);
   } catch (error) {
-    console.error("Error analyzing content:", error);
-    throw new Error("Error analyzing content");
+    console.error("Please provide the URL of a fact-check article. There was an error while analyzing the content.", error);
+    throw new Error("Please provide the URL of a fact-check article. There was an error while analyzing the content.");
   }
 };
 
