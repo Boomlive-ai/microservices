@@ -121,6 +121,39 @@ app.get('/user-agent', (req, res) => {
 // Dynamic Link for The core
 app.get('/fetch-links/:id', fetchLinks);
 
+app.get("/api/boomlivenewsletter", async (req, res) => {
+  try {
+    const {
+      emailId,
+      beehiiv_publication_deepfake_watch,
+      beehiiv_publication_verified_by_boom,
+      beehiiv_publication_decode_with_adrija
+    } = req.query; // Use req.query for GET requests
+
+    // Check if the required parameter is provided
+    if (!emailId) {
+      return res.status(400).json({ success: false, error: "Missing required parameter: emailId" });
+    }
+
+    const response = await axios.get("https://boomlive.in/dev/h-api/subscribeCustomNewsletter", {
+      params: {
+        emailId,
+        beehiiv_publication_deepfake_watch,
+        beehiiv_publication_verified_by_boom,
+        beehiiv_publication_decode_with_adrija,
+      },
+      headers: {
+        "S-id": "1w3OEaLmf4lfyBxDl9ZrLPjVbSfKxQ4wQ6MynGpyv1ptdtQ0FcIXfjURSMRPwk1o", // Hardcoded S-id
+      },
+    });
+
+    res.json({ success: true, data: response.data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
 // A fallback route to handle any other GET requests
 app.get('*', (req, res) => {
   res.status(200).json({ message: 'Helldo' });
