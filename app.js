@@ -7,6 +7,8 @@ const { seoablityRes } = require("./api/services/seoScoreChecker");
 const {  extractSentimentFromNews, extractSentimentFromNews2, generateSchemaFromArticle } = require("./api/services/analyzeNews"); // Import the summarizeNews function
 const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 const {  extractContentFromArticle } = require("./api/services/extractSectionsFromArticleUrl"); // Import the summarizeNews function
+const {  extractFigureFromArticle } = require("./api/services/scrapCharts"); // Import the summarizeNews function
+
 const {  fetchLinks } = require("./api/services/dynamicLinks"); // Import the summarizeNews function
 
 const fileUpload = require('express-fileupload');
@@ -85,7 +87,9 @@ app.post("/api/seoability", seoablityRes)
 
 app.post("/api/extractArticleContent",extractContentFromArticle )
 
+//Extract Charts From Article
 
+app.post("/api/scrapCharts",extractFigureFromArticle);
 
 // Generate Schema from Article
 
