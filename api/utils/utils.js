@@ -48,6 +48,79 @@ const getWikipediaLink = async (title) => {
   }
 };
 
+// const extractArticleData = async (url) => {
+//   try {
+//     const response = await axios.get(url);
+//     const htmlContent = response.data;
+//     const $ = load(htmlContent);
+
+//     // Extract title and meta description (important for SEO)
+//     const title = $("title").text() || "";
+//     const metaDescription = $("meta[name='description']").attr("content") || "";
+
+//     // Extract all headers for SEO analysis (H1, H2, H3, etc.)
+//     let headers = [];
+//     $("h1, h2, h3, h4, h5, h6").each((index, element) => {
+//       headers.push($(element).text().trim());
+//     });
+
+//     // Extract the article content. First try to get content from <article> and its paragraphs.
+//     let articleText = "";
+//     $("article p").each((index, element) => {
+//       articleText += $(element).text() + "\n";
+//     });
+
+//     // If no article content found, fallback to <p> tags from the entire document
+//     if (!articleText) {
+//       $("p").each((index, element) => {
+//         articleText += $(element).text() + "\n";
+//       });
+//     }
+
+//     // Extract internal links
+//     let internalLinks = [];
+//     $("a").each((index, element) => {
+//       const link = $(element).attr("href");
+//       if (link && link.startsWith("/")) {  // Internal links usually start with '/'
+//         internalLinks.push(link);
+//       }
+//     });
+
+//     // Extract image alt text and title attributes
+//     let images = [];
+//     $(".article-container img").each((index, element) => {
+//       // Use 'data-src' if it exists, otherwise fall back to 'src'
+//       const src = $(element).attr("data-src") || $(element).attr("src") || "";
+//       const alt = $(element).attr("alt") || "No alt text";
+//       const imgTitle = $(element).attr("title") || "No title";
+      
+//       images.push({ src, alt, title: imgTitle });
+//     });
+    
+//     console.log(images);
+
+//     // Clean up the articleText (optional: normalize whitespace, remove non-relevant text, etc.)
+//     articleText = articleText.trim().replace(/\s+/g, ' '); // Normalize spaces
+//     console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+//     console.log(images);
+    
+//     console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+//     // Return the cleaned article text and additional SEO-related data
+//     return {
+//       articleText,       // Cleaned text for content analysis
+//       title,             // Page title for meta analysis
+//       metaDescription,   // Meta description for SEO analysis
+//       headers,           // List of headers (important for SEO)
+//       internalLinks,     // List of internal links
+//       images             // List of images with src, alt text, and title
+//     };
+//   } catch (error) {
+//     console.error("Error fetching article:", error);
+//     throw new Error("Error fetching article content");
+//   }
+// };
+
 const extractArticleData = async (url) => {
   try {
     const response = await axios.get(url);
@@ -57,71 +130,149 @@ const extractArticleData = async (url) => {
     // Extract title and meta description (important for SEO)
     const title = $("title").text() || "";
     const metaDescription = $("meta[name='description']").attr("content") || "";
+    
+    // Extract Open Graph and Twitter metadata (important for social sharing)
+    const ogTitle = $("meta[property='og:title']").attr("content") || "";
+    const ogDescription = $("meta[property='og:description']").attr("content") || "";
+    const twitterTitle = $("meta[name='twitter:title']").attr("content") || "";
+    const twitterDescription = $("meta[name='twitter:description']").attr("content") || "";
 
     // Extract all headers for SEO analysis (H1, H2, H3, etc.)
     let headers = [];
     $("h1, h2, h3, h4, h5, h6").each((index, element) => {
-      headers.push($(element).text().trim());
+      headers.push({
+        level: element.name, // This will capture h1, h2, etc.
+        text: $(element).text().trim()
+      });
     });
 
-    // Extract the article content. First try to get content from <article> and its paragraphs.
+    // More robust content extraction strategy - try multiple common content containers
+    const possibleContentSelectors = [
+      "article", "main", ".content", ".post-content", ".entry-content", 
+      "#content", "[role='main']", ".main-content", ".post", "#main"
+    ];
+    
     let articleText = "";
-    $("article p").each((index, element) => {
-      articleText += $(element).text() + "\n";
-    });
-
-    // If no article content found, fallback to <p> tags from the entire document
+    let contentSelector = "";
+    
+    // Try each selector until we find one with content
+    for (const selector of possibleContentSelectors) {
+      const content = $(selector).text().trim();
+      if (content && content.length > articleText.length) {
+        articleText = content;
+        contentSelector = selector;
+      }
+    }
+    
+    // If still no content, fall back to all paragraphs in the body
     if (!articleText) {
-      $("p").each((index, element) => {
+      $("body p").each((index, element) => {
         articleText += $(element).text() + "\n";
       });
     }
 
-    // Extract internal links
+    // Extract all links from the page
+    let allLinks = [];
     let internalLinks = [];
+    let externalLinks = [];
+    
     $("a").each((index, element) => {
       const link = $(element).attr("href");
-      if (link && link.startsWith("/")) {  // Internal links usually start with '/'
-        internalLinks.push(link);
+      const linkText = $(element).text().trim();
+      
+      if (!link) return;
+      
+      const linkObj = { url: link, text: linkText };
+      allLinks.push(linkObj);
+      
+      // Determine if internal or external
+      try {
+        const linkUrl = new URL(link, url);
+        const pageUrl = new URL(url);
+        
+        if (linkUrl.hostname === pageUrl.hostname) {
+          internalLinks.push(linkObj);
+        } else {
+          externalLinks.push(linkObj);
+        }
+      } catch (e) {
+        // Likely a relative URL, so it's internal
+        internalLinks.push(linkObj);
       }
     });
 
-    // Extract image alt text and title attributes
+    // Extract all images from the page (not limited to specific containers)
     let images = [];
-    $(".article-container img").each((index, element) => {
-      // Use 'data-src' if it exists, otherwise fall back to 'src'
-      const src = $(element).attr("data-src") || $(element).attr("src") || "";
-      const alt = $(element).attr("alt") || "No alt text";
-      const imgTitle = $(element).attr("title") || "No title";
+    $("img").each((index, element) => {
+      // Use multiple possible image source attributes
+      const src = $(element).attr("data-src") || 
+                 $(element).attr("data-lazy-src") || 
+                 $(element).attr("src") || 
+                 "";
+                 
+      const alt = $(element).attr("alt") || "";
+      const imgTitle = $(element).attr("title") || "";
+      const width = $(element).attr("width") || "";
+      const height = $(element).attr("height") || "";
       
-      images.push({ src, alt, title: imgTitle });
+      // Only add images with actual sources
+      if (src) {
+        images.push({ 
+          src, 
+          alt, 
+          title: imgTitle,
+          width,
+          height,
+          hasAlt: alt && alt.trim() !== "",
+          hasTitle: imgTitle && imgTitle.trim() !== ""
+        });
+      }
     });
-    
-    console.log(images);
 
-    // Clean up the articleText (optional: normalize whitespace, remove non-relevant text, etc.)
-    articleText = articleText.trim().replace(/\s+/g, ' '); // Normalize spaces
-    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    console.log(images);
-    
-    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    // Extract schema.org structured data if present
+    let structuredData = [];
+    $('script[type="application/ld+json"]').each((index, element) => {
+      try {
+        const data = JSON.parse($(element).html());
+        structuredData.push(data);
+      } catch (e) {
+        console.log("Error parsing structured data:", e);
+      }
+    });
 
-    // Return the cleaned article text and additional SEO-related data
+    // Clean up the articleText
+    articleText = articleText.trim().replace(/\s+/g, ' ');
+    
+    // Calculate word count
+    const wordCount = articleText.split(/\s+/).length;
+    
     return {
-      articleText,       // Cleaned text for content analysis
-      title,             // Page title for meta analysis
-      metaDescription,   // Meta description for SEO analysis
-      headers,           // List of headers (important for SEO)
-      internalLinks,     // List of internal links
-      images             // List of images with src, alt text, and title
+      articleText,
+      title,
+      metaDescription,
+      socialMetadata: {
+        ogTitle,
+        ogDescription,
+        twitterTitle,
+        twitterDescription
+      },
+      headers,
+      links: {
+        total: allLinks.length,
+        internal: internalLinks,
+        external: externalLinks
+      },
+      images,
+      structuredData,
+      wordCount,
+      contentSelector: contentSelector || "body p", // Which selector was used for content
+      url // Original URL
     };
   } catch (error) {
     console.error("Error fetching article:", error);
-    throw new Error("Error fetching article content");
+    throw new Error(`Error fetching article content: ${error.message}`);
   }
 };
-
-
 
 const fetchArticleContent = async (url) => {
     try {
