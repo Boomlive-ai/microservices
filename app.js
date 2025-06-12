@@ -8,6 +8,7 @@ const {  extractSentimentFromNews, extractSentimentFromNews2, generateSchemaFrom
 const {  summarizeNews } = require("./api/services/summarizeNews"); // Import the summarizeNews function
 const {  extractContentFromArticle } = require("./api/services/extractSectionsFromArticleUrl"); // Import the summarizeNews function
 const {  extractFigureFromArticle } = require("./api/services/scrapCharts"); // Import the summarizeNews function
+const { summarizeMultipleArticles } = require("./api/services/multipleArticlesSummarizer"); 
 
 const {  fetchLinks } = require("./api/services/dynamicLinks"); // Import the summarizeNews function
 
@@ -76,6 +77,7 @@ app.post("/api/sentiment2", extractSentimentFromNews2)
 app.post("/api/summarize", summarizeNews);
 
 
+app.post("/api/summarize-multiple-articles", summarizeMultipleArticles);
 
 // SeoScoreChecker
 
