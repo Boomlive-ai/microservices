@@ -39,33 +39,32 @@ async function fetchMetadata(url) {
 }
 
 // Enhanced summarization for evening brief format
-async function summarizeForEveningBrief(title, description) {
+async function summarizeForEveningBrief(title, description, url) {
   const response = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
       {
         role: 'system',
-        content: `You are a fact-check reporter for BOOM writing conversational evening briefings. Create narrative-style summaries that flow naturally in a newsletter format. Focus on:
-        - What misinformation was spreading
-        - What the reality actually was
-        - Use conversational tone like "turned out to be", "actually showed", "we found that"
-        - Make it engaging and readable for a general audience
-        - Keep it concise but informative (30-40 words max)`
+        content: `You are writing **very short, crisp, and conversational fact-check stories** for WhatsApp sharing.
+        - **Limit each story to 25–35 words max**.
+        - **Skip unnecessary details**, focus on **what people believed vs what actually happened**.
+        - Use **natural storytelling**, like a conversation.
+        - End each story with a **plain text link** ("Read more: https://example.com").`
       },
       {
         role: 'user',
-        content: `Create a conversational summary for this fact-check article:
+        content: `Write a **very short**, engaging WhatsApp-style summary for this fact-check:
         Title: ${title}
         Description: ${description}
-        
-        Write it as if explaining to a friend what misinformation was debunked. Start with what people thought was true, then reveal what actually happened.`
+        Keep it brief but natural, and include this direct link at the end: ${url}`
       }
     ],
     temperature: 0.7,
-    max_tokens: 80
+    max_tokens: 60
   });
   return response.choices[0].message.content.trim();
 }
+
 
 // Generate contextual opening for the brief based on articles
 async function generateBriefOpening(articles) {
@@ -126,35 +125,21 @@ function formatBoomBrief(articles, briefContext, userTitle = "BOOM Evening Brief
     day: 'numeric' 
   });
 
-  if (!articles || articles.length === 0) {
-    return `${userTitle} | ${today}\n\nHey,\n\nQuiet day on the misinformation front. We're keeping our radar active.\n\n— Team BOOM`;
-  }
-
   let briefContent = `${userTitle} | ${today}\n\nHey,\n\n`;
 
-  // Use AI-generated opening if available
   if (briefContext?.opening) {
-    briefContent += `${briefContext.opening} `;
+    briefContent += `${briefContext.opening}\n\n`;
   }
 
-  // Add articles with natural flow and plain links - separate paragraphs for better readability
   articles.forEach((article, index) => {
-    if (index === 0) {
-      briefContent += `${article.summary} ${article.url}.\n\n`;
-    } else if (index === 1) {
-      briefContent += `Another viral claim ${article.summary.toLowerCase()} ${article.url}.\n\n`;
-    } else {
-      briefContent += `We also found ${article.summary.toLowerCase()} ${article.url}.\n\n`;
-    }
+    briefContent += `${article.summary} Read more: ${article.url}\n\n`;
   });
 
-  // Use AI-generated closing if available
   if (briefContext?.closing) {
     briefContent += `${briefContext.closing}\n\n`;
   }
 
   briefContent += `— Team BOOM`;
-  
   return briefContent;
 }
 
