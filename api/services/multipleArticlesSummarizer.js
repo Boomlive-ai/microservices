@@ -49,7 +49,7 @@ async function summarizeForEveningBrief(title, description, url) {
         - **Limit each story to 25–35 words max**.
         - **Skip unnecessary details**, focus on **what people believed vs what actually happened**.
         - Use **natural storytelling**, like a conversation.
-        - End each story with a **plain text link** ("Read more: https://example.com").`
+        - End each story with a **plain text link** ("Read more: ${url}").`
       },
       {
         role: 'user',
