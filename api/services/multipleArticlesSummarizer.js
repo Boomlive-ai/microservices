@@ -132,7 +132,7 @@ function formatBoomBrief(articles, briefContext, userTitle = "BOOM Evening Brief
   }
 
   articles.forEach((article, index) => {
-    briefContent += `${article.summary} Read more: ${article.url}\n\n`;
+    briefContent += `${article.summary}\n\n`;
   });
 
   if (briefContext?.closing) {
