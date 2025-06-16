@@ -105,7 +105,7 @@ async function generateBriefClosing(articlesCount) {
         - "We're staying on top of it to make sure you get what's verified — not what's viral."
         - "As always, separating signal from noise in the information chaos."
         - "Keeping watch so you don't have to sort truth from fiction."
-        Keep it under 20 words and maintain BOOM's authoritative but friendly tone.`
+        Keep it under very short and crisp and maintain BOOM's authoritative but friendly tone.`
       },
       {
         role: 'user',
