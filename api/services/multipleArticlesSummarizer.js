@@ -45,18 +45,20 @@ async function summarizeForEveningBrief(title, description, url) {
     messages: [
       {
         role: 'system',
-        content: `You are writing **very short, crisp, and conversational fact-check stories** for WhatsApp sharing.
-        - **Limit each story to 25–35 words max**.
-        - **Skip unnecessary details**, focus on **what people believed vs what actually happened**.
-        - Use **natural storytelling**, like a conversation.
-        - End each story with a **plain text link** ("Read more: ${url}").`
+        content: `You are writing **very short, crisp fact-check summaries** that will be part of a flowing story.
+        - **Limit each summary to 25–35 words max**.
+        - **DO NOT start with greetings like "Hey", "Hi", etc.**
+        - **Focus on what people believed vs what actually happened**
+        - Write as complete sentences that can flow with story connectors
+        - Be conversational but direct`
       },
       {
         role: 'user',
-        content: `Write a **very short**, engaging WhatsApp-style summary for this fact-check:
+        content: `Write a brief fact-check summary that flows naturally in a story:
         Title: ${title}
         Description: ${description}
-        Keep it brief but natural, and include this direct link at the end: ${url}`
+        
+        Do NOT start with "Hey" or similar greetings. Just state the fact-check directly.`
       }
     ],
     temperature: 0.7,
@@ -64,7 +66,6 @@ async function summarizeForEveningBrief(title, description, url) {
   });
   return response.choices[0].message.content.trim();
 }
-
 
 // Generate contextual opening for the brief based on articles
 async function generateBriefOpening(articles) {
@@ -117,7 +118,7 @@ async function generateBriefClosing(articlesCount) {
   return response.choices[0].message.content.trim();
 }
 
-// Format BOOM brief with user-provided title and plain links
+// Enhanced format for story-like flow suitable for WhatsApp/Twitter
 function formatBoomBrief(articles, briefContext, userTitle = "BOOM Evening Brief") {
   const today = new Date().toLocaleDateString('en-US', { 
     year: 'numeric', 
@@ -125,27 +126,88 @@ function formatBoomBrief(articles, briefContext, userTitle = "BOOM Evening Brief
     day: 'numeric' 
   });
 
-  let briefContent = `${userTitle} | ${today}\n\nHey,\n\n`;
+  let briefContent = `${userTitle} | ${today}\n\n`;
 
   if (briefContext?.opening) {
     briefContent += `${briefContext.opening}\n\n`;
   }
 
+  // Create a flowing narrative by connecting the stories
+  const storyConnectors = [
+    "First up,",
+    "Meanwhile,", 
+    "And then there's",
+    "We also caught",
+    "Another one making rounds -",
+    "Plus,"
+  ];
+
   articles.forEach((article, index) => {
-    briefContent += `${article.summary}\n\n`;
+    // Add story connectors for flow (except first article)
+    if (index > 0 && index < storyConnectors.length) {
+      briefContent += `${storyConnectors[index]} `;
+    }
+    
+    // Add the summary as part of continuous narrative
+    briefContent += `${article.summary}`;
+    
+    // Add URL in a more natural way
+    briefContent += ` 📖 Full details: ${article.url}`;
+    
+    // Add spacing between stories but keep the flow
+    if (index < articles.length - 1) {
+      briefContent += `\n\n`;
+    }
   });
+
+  briefContent += `\n\n`;
 
   if (briefContext?.closing) {
     briefContent += `${briefContext.closing}\n\n`;
   }
 
-  briefContent += `— Team BOOM`;
+  briefContent += `— Team BOOM\n\n#FactCheck #BOOM #MisinformationAlert`;
   return briefContent;
+}
+
+// Alternative format optimized specifically for social media sharing
+function formatSocialMediaStory(articles, briefContext, userTitle = "Today's Fact Check") {
+  const today = new Date().toLocaleDateString('en-US', { 
+    month: 'long', 
+    day: 'numeric' 
+  });
+
+  let story = `🚨 ${userTitle} - ${today}\n\n`;
+
+  if (briefContext?.opening) {
+    story += `${briefContext.opening}\n\n`;
+  }
+
+  // Create one flowing paragraph
+  story += articles.map((article, index) => {
+    let connector = "";
+    if (index === 0) connector = "";
+    else if (index === 1) connector = "Then, ";
+    else if (index === 2) connector = "Also, ";
+    else connector = "Plus, ";
+    
+    return `${connector}${article.summary} (${article.url})`;
+  }).join(" ");
+
+  story += `\n\n`;
+
+  if (briefContext?.closing) {
+    story += `${briefContext.closing}\n\n`;
+  }
+
+  story += `Stay informed! 📱\n— BOOM\n\n#FactCheck #FakeNews #TruthMatters`;
+  
+  return story;
 }
 
 // Main Express handler that returns formatted brief directly
 async function summarizeMultipleArticles(req, res) {
-  const { urls, title } = req.body; // Accept optional title parameter
+  const { urls, title, format = "brief" } = req.body; // Accept format parameter
 
   if (!Array.isArray(urls) || urls.length === 0) {
     return res.status(400).json({ error: 'Provide an array of at least one URL.' });
@@ -158,7 +220,7 @@ async function summarizeMultipleArticles(req, res) {
     // Build articles with enhanced summaries
     const articles = await Promise.all(metadataList.map(async (meta) => {
       const summary = meta.description ? 
-        await summarizeForEveningBrief(meta.title, meta.description) : 
+        await summarizeForEveningBrief(meta.title, meta.description, meta.url) : 
         'No summary available';
       
       return {
@@ -180,8 +242,13 @@ async function summarizeMultipleArticles(req, res) {
       closing: briefClosing
     };
 
-    // Format the complete brief
-    const formattedBrief = formatBoomBrief(articles, briefContext, title);
+    // Format based on requested format
+    let formattedBrief;
+    if (format === "social") {
+      formattedBrief = formatSocialMediaStory(articles, briefContext, title);
+    } else {
+      formattedBrief = formatBoomBrief(articles, briefContext, title);
+    }
 
     // Return the formatted brief directly
     return res.json({
@@ -189,6 +256,7 @@ async function summarizeMultipleArticles(req, res) {
       articles_processed: articles.length,
       total_articles: urls.length,
       brief: formattedBrief,
+      format_used: format,
       // Optional: include raw data for debugging/additional processing
       raw_data: {
         articles,
@@ -205,6 +273,7 @@ async function summarizeMultipleArticles(req, res) {
 module.exports = { 
   summarizeMultipleArticles, 
   formatBoomBrief,
+  formatSocialMediaStory,
   summarizeForEveningBrief,
   generateBriefOpening,
   generateBriefClosing
@@ -212,3 +281,12 @@ module.exports = {
 
 // Express route for generating the brief
 // app.post("/api/summarize-multiple-articles", summarizeMultipleArticles);
+
+// Usage examples:
+// For standard brief format:
+// POST /api/summarize-multiple-articles
+// { "urls": [...], "title": "Today's Fact Check" }
+
+// For social media optimized format:
+// POST /api/summarize-multiple-articles  
+// { "urls": [...], "title": "Today's Fact Check", "format": "social" }
