@@ -183,16 +183,16 @@ function formatSocialMediaStory(articles, briefContext, userTitle = "Today's Fac
     story += `${briefContext.opening}\n\n`;
   }
 
-  // Create one flowing paragraph
+  // Create one flowing paragraph with hidden "Read more" markdown links
   story += articles.map((article, index) => {
     let connector = "";
-    if (index === 0) connector = "";
-    else if (index === 1) connector = "Then, ";
+    if (index === 1) connector = "Then, ";
     else if (index === 2) connector = "Also, ";
-    else connector = "Plus, ";
-    
-    return `${connector}${article.summary} (${article.url})`;
-  }).join(" ");
+    else if (index > 2) connector = "Plus, ";
+
+    // Use markdown hidden link format: [Read more](url)
+    return `${connector}${article.summary} [Read more](${article.url})`;
+  }).join(' ');
 
   story += `\n\n`;
 
@@ -201,7 +201,7 @@ function formatSocialMediaStory(articles, briefContext, userTitle = "Today's Fac
   }
 
   story += `Stay informed! 📱\n— BOOM\n\n#FactCheck #FakeNews #TruthMatters`;
-  
+
   return story;
 }
 
