@@ -1,22 +1,21 @@
-// Enhanced OpenAI summarization for BOOM Evening Brief format
+// Enhanced OpenAI summarization for BOOM formats
 const axios = require("axios");
 const { load } = require("cheerio");
+const dayjs = require('dayjs');              // for current date formatting
 const { OpenAI } = require("openai");
 require("dotenv").config();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Fetch metadata (title, complete description, date, author) from a URL
+// Fetch metadata (title, description, date, author) from a URL
 async function fetchMetadata(url) {
   try {
     const { data } = await axios.get(url);
     const $ = load(data);
 
-    // Try meta description first
     let description = $('meta[property="og:description"]').attr('content')
                    || $('meta[name="description"]').attr('content')
                    || '';
-    // If too short or ends in ellipsis, fallback to first meaningful paragraph
     if (!description || description.length < 50 || /\.\.\.$/.test(description.trim())) {
       description = $('article p').first().text().trim() || $('p').first().text().trim();
     }
@@ -38,255 +37,109 @@ async function fetchMetadata(url) {
   }
 }
 
-// Enhanced summarization for evening brief format
-async function summarizeForEveningBrief(title, description, url) {
-  const response = await openai.chat.completions.create({
+// Summarize each article snippet (25-35 words) in BOOM tone
+async function summarizeForEveningBrief(title, description) {
+  const resp = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
-      {
-        role: 'system',
-        content: `You are writing **very short, crisp fact-check summaries** that will be part of a flowing story.
-        - **Limit each summary to 25–35 words max**.
-        - **DO NOT start with greetings like "Hey", "Hi", etc.**
-        - **Focus on what people believed vs what actually happened**
-        - Write as complete sentences that can flow with story connectors
-        - Be conversational but direct`
-      },
-      {
-        role: 'user',
-        content: `Write a brief fact-check summary that flows naturally in a story:
-        Title: ${title}
-        Description: ${description}
-        
-        Do NOT start with "Hey" or similar greetings. Just state the fact-check directly.`
-      }
+      { role: 'system', content: `You write punchy, user-friendly fact checks for BOOM. Keep it 25–35 words, active voice, no "Hey". Show what was claimed vs. reality in a cheeky, clear style.` },
+      { role: 'user', content: `Title: ${title}\nDescription: ${description}` }
     ],
     temperature: 0.7,
     max_tokens: 60
   });
-  return response.choices[0].message.content.trim();
+  return resp.choices[0].message.content.trim();
 }
 
-// Generate contextual opening for the brief based on articles
-async function generateBriefOpening(articles) {
-  const titles = articles.map(a => a.title).join('; ');
-  
-  const response = await openai.chat.completions.create({
+// Generate a zestful opening line in BOOM's style
+async function generateBriefOpening(headlines) {
+  const resp = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
-      {
-        role: 'system',
-        content: `You are writing the opening paragraph for BOOM's evening brief. Create a conversational, engaging opening that:
-        - Sets the tone for what misinformation was trending today
-        - Uses casual language like "Today saw...", "Several claims made rounds...", "It's been a busy day..."
-        - Connects the different types of false claims thematically
-        - Keep it under 25 words
-        - Don't mention specific details, just set the scene`
-      },
-      {
-        role: 'user',
-        content: `Write an opening line for today's misinformation roundup based on these fact-check headlines: ${titles}`
-      }
+      { role: 'system', content: `You're BOOM Live! Write a snappy opening (under 25 words) that teases today's wildest misinformation wave. Think cheeky, gripping, and energetic—no dry news-speak.` },
+      { role: 'user', content: `Headlines: ${headlines.join('; ')}` }
     ],
     temperature: 0.8,
     max_tokens: 50
   });
-  return response.choices[0].message.content.trim();
+  return resp.choices[0].message.content.trim();
 }
 
-// Generate contextual closing for the brief
-async function generateBriefClosing(articlesCount) {
-  const response = await openai.chat.completions.create({
+// Generate a friendly BOOM-style closing line
+async function generateBriefClosing(count) {
+  const resp = await openai.chat.completions.create({
     model: 'gpt-4o',
     messages: [
-      {
-        role: 'system',
-        content: `Write a brief closing line for BOOM's evening newsletter. Should be conversational and reassuring. Examples:
-        - "We're staying on top of it to make sure you get what's verified — not what's viral."
-        - "As always, separating signal from noise in the information chaos."
-        - "Keeping watch so you don't have to sort truth from fiction."
-        Keep it under very short and crisp and maintain BOOM's authoritative but friendly tone.`
-      },
-      {
-        role: 'user',
-        content: `Write a closing line for today's brief covering ${articlesCount} fact-checks.`
-      }
+      { role: 'system', content: `You’re wrapping up BOOM’s evening. Write a warm, witty closing for ${count} fact-checks that reassures and entertains.` }
     ],
     temperature: 0.8,
     max_tokens: 40
   });
-  return response.choices[0].message.content.trim();
+  return resp.choices[0].message.content.trim();
 }
 
-// Enhanced format for story-like flow suitable for WhatsApp/Twitter
-function formatBoomBrief(articles, briefContext, userTitle = "BOOM Evening Brief") {
-  const today = new Date().toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+// Generate the full BOOM-style story via OpenAI
+// Generate the full story without exaggeration
+async function generateFullStory(articles, title, opening, closing) {
+  const today = dayjs().format('MMMM D, YYYY');
+  const payload = articles.map(a => ({ url: a.url, summary: a.summary }));
+
+  const resp = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [
+      {
+        role: 'system',
+        content: `You’re BOOM’s host. Tell readers what happened today in a clear, conversational flow:
+
+🚨 Begins with "${title} – ${today}"
+
+Hey, (newline)
+
+• Present each fact-check summary inline with its URL as a Markdown link
+• Use connectors like “First,” “Then,” “Also,”
+• Narrate the events as they unfolded today without exaggeration
+• After summaries, include the provided closing line
+• End with "— Team BOOM"
+
+Return plain text with Markdown links.`
+      },
+      { role: 'user', content: JSON.stringify({ articles: payload, opening, closing }, null, 2) }
+    ],
+    temperature: 0.5,
+    max_tokens: 400
   });
 
-  let briefContent = `${userTitle} | ${today}\n\n`;
-
-  if (briefContext?.opening) {
-    briefContent += `${briefContext.opening}\n\n`;
-  }
-
-  // Create a flowing narrative by connecting the stories
-  const storyConnectors = [
-    "First up,",
-    "Meanwhile,", 
-    "And then there's",
-    "We also caught",
-    "Another one making rounds -",
-    "Plus,"
-  ];
-
-  articles.forEach((article, index) => {
-    // Add story connectors for flow (except first article)
-    if (index > 0 && index < storyConnectors.length) {
-      briefContent += `${storyConnectors[index]} `;
-    }
-    
-    // Add the summary as part of continuous narrative
-    briefContent += `${article.summary}`;
-    
-    // Add URL in a more natural way
-    briefContent += ` 📖 Full details: ${article.url}`;
-    
-    // Add spacing between stories but keep the flow
-    if (index < articles.length - 1) {
-      briefContent += `\n\n`;
-    }
-  });
-
-  briefContent += `\n\n`;
-
-  if (briefContext?.closing) {
-    briefContent += `${briefContext.closing}\n\n`;
-  }
-
-  briefContent += `— Team BOOM\n\n#FactCheck #BOOM #MisinformationAlert`;
-  return briefContent;
+  return resp.choices[0].message.content.trim();
 }
 
-// Alternative format optimized specifically for social media sharing
-function formatSocialMediaStory(articles, briefContext, userTitle = "Today's Fact Check") {
-  const today = new Date().toLocaleDateString('en-US', { 
-    month: 'long', 
-    day: 'numeric' 
-  });
 
-  let story = `🚨 ${userTitle} - ${today}\n\n`;
-
-  if (briefContext?.opening) {
-    story += `${briefContext.opening}\n\n`;
-  }
-
-  // Create one flowing paragraph with hidden "Read more" markdown links
-  story += articles.map((article, index) => {
-    let connector = "";
-    if (index === 1) connector = "Then, ";
-    else if (index === 2) connector = "Also, ";
-    else if (index > 2) connector = "Plus, ";
-
-    // Use markdown hidden link format: [Read more](url)
-    return `${connector}${article.summary} [Read more](${article.url})`;
-  }).join(' ');
-
-  story += `\n\n`;
-
-  if (briefContext?.closing) {
-    story += `${briefContext.closing}\n\n`;
-  }
-
-  story += `Stay informed! 📱\n— BOOM\n\n#FactCheck #FakeNews #TruthMatters`;
-
-  return story;
-}
-
-// Main Express handler that returns formatted brief directly
+// Express handler
 async function summarizeMultipleArticles(req, res) {
-  const { urls, title, format = "brief" } = req.body; // Accept format parameter
-
-  if (!Array.isArray(urls) || urls.length === 0) {
-    return res.status(400).json({ error: 'Provide an array of at least one URL.' });
+  const { urls, title = "Today's Fact Check" } = req.body;
+  if (!Array.isArray(urls) || !urls.length) {
+    return res.status(400).json({ error: 'Provide an array of URLs.' });
   }
-
   try {
-    // Fetch all metadata in parallel
-    const metadataList = await Promise.all(urls.map(fetchMetadata));
+    // Fetch metadata & create summaries
+    const metas = await Promise.all(urls.map(fetchMetadata));
+    const summaries = await Promise.all(
+      metas.map(m => summarizeForEveningBrief(m.title, m.description))
+    );
 
-    // Build articles with enhanced summaries
-    const articles = await Promise.all(metadataList.map(async (meta) => {
-      const summary = meta.description ? 
-        await summarizeForEveningBrief(meta.title, meta.description, meta.url) : 
-        'No summary available';
-      
-      return {
-        title: meta.title,
-        description: meta.description,
-        date: meta.date,
-        author: meta.author,
-        url: meta.url,
-        summary
-      };
-    }));
+    const articles = metas.map((m, i) => ({ ...m, summary: summaries[i] }));
 
-    // Generate contextual opening and closing
-    const briefOpening = await generateBriefOpening(articles);
-    const briefClosing = await generateBriefClosing(articles.length);
+    // Opening & closing lines
+    const opening = await generateBriefOpening(metas.map(m => m.title));
+    const closing = await generateBriefClosing(articles.length);
 
-    const briefContext = {
-      opening: briefOpening,
-      closing: briefClosing
-    };
+    // Full story
+    const fullStory = await generateFullStory(articles, title, opening, closing);
 
-    // Format based on requested format
-    let formattedBrief;
-    if (format === "social") {
-      formattedBrief = formatSocialMediaStory(articles, briefContext, title);
-    } else {
-      formattedBrief = formatBoomBrief(articles, briefContext, title);
-    }
-
-    // Return the formatted brief directly
-    return res.json({
-      success: true,
-      articles_processed: articles.length,
-      total_articles: urls.length,
-      brief: formattedBrief,
-      format_used: format,
-      // Optional: include raw data for debugging/additional processing
-      raw_data: {
-        articles,
-        brief_context: briefContext
-      }
-    });
-
+    return res.json({ success: true, brief: fullStory });
   } catch (err) {
-    console.error('summarizeMultipleArticles error:', err);
+    console.error(err);
     return res.status(500).json({ error: 'Internal server error', details: err.message });
   }
 }
 
-module.exports = { 
-  summarizeMultipleArticles, 
-  formatBoomBrief,
-  formatSocialMediaStory,
-  summarizeForEveningBrief,
-  generateBriefOpening,
-  generateBriefClosing
-};
-
-// Express route for generating the brief
-// app.post("/api/summarize-multiple-articles", summarizeMultipleArticles);
-
-// Usage examples:
-// For standard brief format:
-// POST /api/summarize-multiple-articles
-// { "urls": [...], "title": "Today's Fact Check" }
-
-// For social media optimized format:
-// POST /api/summarize-multiple-articles  
-// { "urls": [...], "title": "Today's Fact Check", "format": "social" }
+module.exports = { summarizeMultipleArticles };
