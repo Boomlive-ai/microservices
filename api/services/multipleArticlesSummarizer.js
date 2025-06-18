@@ -95,8 +95,9 @@ async function generateFullStory(articles, title, opening, closing) {
 
 Hey, (newline)
 
-• Present each fact-check summary inline with its URL as a Markdown link
-• Use connectors like “First,” “Then,” “Also,”
+• Present each fact-check summary inline with its URL as a Markdown link and make sure the link is embeded in summary statements not in Read more or click here.
+• Use a friendly, engaging tone which narerates the events as they unfolded today to  keep readers hooked
+• Use the conversational flow like a message and someone is narating what happened.
 • Narrate the events as they unfolded today without exaggeration
 • After summaries, include the provided closing line
 • End with "— Team BOOM"
