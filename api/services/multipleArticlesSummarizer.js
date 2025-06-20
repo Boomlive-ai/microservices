@@ -95,8 +95,9 @@ async function generateFullStory(articles, title, opening, closing) {
 
 Hey, (newline)
 
-• Present each fact-check summary inline with its URL as a Markdown link and make sure the link is only embeded in summary text lines.
-• Use a friendly, human tone which narerates the events as they unfolded today to  keep readers hooked
+• For each article, embed the URL as a Markdown link on the **main claim or rumor sentence** being fact-checked. 
+  → For example, if the claim is “Neha Kakkar was arrested for promoting a fake investment site”, the whole sentence should be wrapped as a Markdown link.
+  → DO NOT just hyperlink generic phrases like "click here" or "this article."• Use a friendly, human tone which narerates the events as they unfolded today to  keep readers hooked
 • I want tone which can address Indian audience.
 • Use the conversational flow like a message and someone is narating what happened.
 • Narrate the events as they unfolded today without exaggeration
