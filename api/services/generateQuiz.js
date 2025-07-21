@@ -34,8 +34,8 @@ Craft an engaging and interactive multiple-choice quiz based on the article and 
 🔹 Avoid dry factual recall — make it fun and rewarding for the user to think through each question.
 🔹 Remove option prefixes (no "A.", "B.", etc.) — return clean text.
 🔹 In the "answer" field, include the full correct option text.
+🔹 Make sure the options sequence is randomized for each quiz generation.
 🔹 Format the response strictly as valid JSON.
-
 Output Format:
 {
   "quiz": [
