@@ -9,7 +9,7 @@ const {  summarizeNews } = require("./api/services/summarizeNews"); // Import th
 const {  extractContentFromArticle } = require("./api/services/extractSectionsFromArticleUrl"); // Import the summarizeNews function
 const {  extractFigureFromArticle } = require("./api/services/scrapCharts"); // Import the summarizeNews function
 const { summarizeMultipleArticles } = require("./api/services/multipleArticlesSummarizer"); 
-
+const { exportQuiz} = require("./api/services/generateQuiz")
 const {  fetchLinks } = require("./api/services/dynamicLinks"); // Import the summarizeNews function
 
 const fileUpload = require('express-fileupload');
@@ -126,6 +126,12 @@ app.get('/user-agent', (req, res) => {
 
 // Dynamic Link for The core
 app.get('/fetch-links/:id', fetchLinks);
+
+
+// Generate Quiz
+
+app.post("/api/generateQuiz", exportQuiz);
+
 
 app.get("/api/boomlivenewsletter", async (req, res) => {
   try {
