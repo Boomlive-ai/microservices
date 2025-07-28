@@ -42,7 +42,7 @@ Output Format:
     {
       "question": "string",
       "options": ["option text 1", "option text 2", "option text 3", "option text 4"],
-      "answer": "index of correct option",
+      "answer": "index of correct option Eg: 0 or 1 or 2 or 3",
       "explanation": "Explanation for answer"
     },
     ...
