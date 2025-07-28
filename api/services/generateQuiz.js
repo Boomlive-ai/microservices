@@ -55,7 +55,7 @@ Metadata: ${JSON.stringify(meta)}
 
 
     const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4.1-mini",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.5,
     });
