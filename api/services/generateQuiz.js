@@ -29,7 +29,7 @@ const generateQuizFromData = async (articleText, meta) => {
     const prompt = `
 Craft an engaging and interactive multiple-choice quiz based on the article and metadata below.
 
-🔹 Generate max  questions as needed to capture the depth and nuance of the content — don’t restrict to a fixed number.
+🔹 Generate max 5 questions as needed to capture the depth and nuance of the content —  restrict to a 5 questions only strictly.
 🔹 Spark curiosity, challenge assumptions, and include playful phrasing when appropriate.
 🔹 Avoid dry factual recall — make it fun and rewarding for the user to think through each question.
 🔹 Remove option prefixes (no "A.", "B.", etc.) — return clean text.
