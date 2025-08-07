@@ -141,10 +141,10 @@ Output Format:
 {
   "quiz": [
     {
-      "question": "string ${languageInstruction}",
-      "options": ["option text 1 ${languageInstruction}", "option text 2 ${languageInstruction}", "option text 3 ${languageInstruction}", "option text 4 ${languageInstruction}"],
-      "answer": 0,
-      "explanation": "Explanation for answer ${languageInstruction}"
+      "question": "string",
+      "options": ["option text 1", "option text 2", "option text 3", "option text 4"],
+      "answer": "index of correct answer from options array",
+      "explanation": "Explanation for answer"
     },
     ...
   ]
@@ -167,23 +167,23 @@ Metadata: ${JSON.stringify(meta)}
 /* 🚀 Express handler function with language support */
 const exportQuiz = async (req, res) => {
     const { url, lang = "en" } = req.body;
-    
+
     if (!url) {
         return res.status(400).json({ error: "URL is required" });
     }
 
     // Validate language parameter
     if (!languageConfig[lang]) {
-        return res.status(400).json({ 
-            error: `Unsupported language: ${lang}. Supported languages: ${Object.keys(languageConfig).join(", ")}` 
+        return res.status(400).json({
+            error: `Unsupported language: ${lang}. Supported languages: ${Object.keys(languageConfig).join(", ")}`
         });
     }
 
     try {
         const { articleText, meta } = await scrapeArticleData(url);
         const quiz = await generateQuizFromData(articleText, meta, lang);
-        
-        res.status(200).json({ 
+
+        res.status(200).json({
             quiz,
             language: languageConfig[lang].name,
             langCode: lang
