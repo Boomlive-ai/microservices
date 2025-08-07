@@ -11,6 +11,7 @@ const {  extractFigureFromArticle } = require("./api/services/scrapCharts"); // 
 const { summarizeMultipleArticles } = require("./api/services/multipleArticlesSummarizer"); 
 const { exportQuiz} = require("./api/services/generateQuiz")
 const {  fetchLinks } = require("./api/services/dynamicLinks"); // Import the summarizeNews function
+const { translateBoomArticle  } = require("./api/services/translateBoomArticle"); // Import the summarizeNews function
 
 const fileUpload = require('express-fileupload');
 const app = express();
@@ -131,6 +132,9 @@ app.get('/fetch-links/:id', fetchLinks);
 // Generate Quiz
 
 app.post("/api/generateQuiz", exportQuiz);
+
+// Add this route to your Express app
+app.post("/api/translateBoomArticle", translateBoomArticle);
 
 
 app.get("/api/boomlivenewsletter", async (req, res) => {
