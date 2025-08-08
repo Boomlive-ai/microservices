@@ -117,8 +117,87 @@ const scrapeArticleData = async (url) => {
 
     return { articleText, meta };
 };
-
+const quizFunctionSchema = {
+    name: "generateQuiz",
+    description: "Generate a structured multiple-choice quiz from article content",
+    parameters: {
+        type: "object",
+        properties: {
+            quiz: {
+                type: "array",
+                items: {
+                    type: "object",
+                    properties: {
+                        question: { type: "string", description: "The quiz question" },
+                        options: {
+                            type: "array",
+                            items: { type: "string" },
+                            minItems: 4,
+                            maxItems: 4,
+                            description: "List of 4 answer options"
+                        },
+                        answer: {
+                            type: "integer",
+                            minimum: 0,
+                            maximum: 3,
+                            description: "Index of the correct option"
+                        },
+                        explanation: { type: "string", description: "Explanation for the correct answer" }
+                    },
+                    required: ["question", "options", "answer", "explanation"]
+                }
+            }
+        },
+        required: ["quiz"]
+    }
+};
 /* ✨ Generate quiz using OpenAI with language support */
+// const generateQuizFromData = async (articleText, meta, lang = "en") => {
+//     const languageInfo = languageConfig[lang] || languageConfig["en"];
+//     const languageInstruction = languageInfo.instruction;
+
+//     const prompt = `
+// Craft an engaging and interactive multiple-choice quiz based on the article and metadata below.
+
+// 🌐 IMPORTANT: Generate all content ${languageInstruction}. All questions, options, answers, and explanations must be ${languageInstruction}.
+
+// 🔹 Generate max 5 questions as needed to capture the depth and nuance of the content — restrict to 5 questions only strictly.
+// 🔹 Spark curiosity, challenge assumptions, and include playful phrasing when appropriate.
+// 🔹 Avoid dry factual recall — make it fun and rewarding for the user to think through each question.
+// 🔹 Remove option prefixes (no "A.", "B.", etc.) — return clean text.
+// 🔹 In the "answer" field, include the index (0-3) of the correct option.
+// 🔹 Make sure the options sequence is randomized for each quiz generation.
+// 🔹 Format the response strictly as valid JSON.
+// 🔹 All text content including questions, options, and explanations should be ${languageInstruction}.
+
+// Output Format:
+// {
+//   "quiz": [
+//     {
+//       "question": "string",
+//       "options": ["option text 1", "option text 2", "option text 3", "option text 4"],
+//       "answer": "index of correct answer from options array",
+//       "explanation": "Explanation for answer"
+//     },
+//     ...
+//   ]
+// }
+
+// Article: ${articleText}
+// Metadata: ${JSON.stringify(meta)}
+// `;
+
+//     const response = await openai.chat.completions.create({
+//         model: "gpt-4.1-mini",
+//         messages: [{ role: "user", content: prompt }],
+//         functions: [quizFunctionSchema],
+//         function_call: { name: "generateQuiz" },
+//         temperature: 0.5,
+//     });
+//     console.log(response.choices[0].message.content)
+//     const cleaned = response.choices[0].message.content.trim().replace(/``````/g, "");
+//     return JSON.parse(cleaned);
+// };
 const generateQuizFromData = async (articleText, meta, lang = "en") => {
     const languageInfo = languageConfig[lang] || languageConfig["en"];
     const languageInstruction = languageInfo.instruction;
@@ -137,19 +216,6 @@ Craft an engaging and interactive multiple-choice quiz based on the article and 
 🔹 Format the response strictly as valid JSON.
 🔹 All text content including questions, options, and explanations should be ${languageInstruction}.
 
-Output Format:
-{
-  "quiz": [
-    {
-      "question": "string",
-      "options": ["option text 1", "option text 2", "option text 3", "option text 4"],
-      "answer": "index of correct answer from options array",
-      "explanation": "Explanation for answer"
-    },
-    ...
-  ]
-}
-
 Article: ${articleText}
 Metadata: ${JSON.stringify(meta)}
 `;
@@ -157,11 +223,20 @@ Metadata: ${JSON.stringify(meta)}
     const response = await openai.chat.completions.create({
         model: "gpt-4.1-mini",
         messages: [{ role: "user", content: prompt }],
+        functions: [quizFunctionSchema],
+        function_call: { name: "generateQuiz" },
         temperature: 0.5,
+        max_tokens: 3000
     });
 
-    const cleaned = response.choices[0].message.content.trim().replace(/``````/g, "");
-    return JSON.parse(cleaned);
+    const args = response.choices[0].message.function_call?.arguments;
+
+    if (!args) {
+        throw new Error("No function_call arguments returned from OpenAI");
+    }
+
+    const parsed = JSON.parse(args);
+    return parsed;
 };
 
 /* 🚀 Express handler function with language support */

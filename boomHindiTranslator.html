@@ -380,6 +380,17 @@
             display: none;
         }
 
+        .hocalwire-draggable {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            clear: both;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .translator-container {
@@ -428,8 +439,8 @@
     <div class="app">
         <div class="translator-container">
             <div class="header">
-                <h1>🔄 BOOM Live Article Translator</h1>
-                <p>Enter a BOOM Live English article URL to get the Hindi translation</p>
+                <h1>🔄 BOOM Article Translator</h1>
+                <p>Enter a BOOM English article URL to get the Hindi translation</p>
             </div>
 
             <div class="input-section">
@@ -712,18 +723,18 @@
         async function translateArticle() {
             if (isLoading) return;
 
-            const articleUrl = articleUrlInput.value.trim();
+            const newsUrl = articleUrlInput.value.trim();
             
-            if (!articleUrl) {
+            if (!newsUrl) {
                 showError('Please enter a valid BOOM Live article URL');
                 return;
             }
 
-            const newsId = extractNewsId(articleUrl);
-            if (!newsId) {
-                showError('Could not extract article ID from URL. Please check the URL format.');
-                return;
-            }
+            // const newsId = extractNewsId(articleUrl);
+            // if (!newsId) {
+            //     showError('Could not extract article ID from URL. Please check the URL format.');
+            //     return;
+            // }
 
             hideError();
             showLoading();
@@ -735,7 +746,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ newsId }),
+                    body: JSON.stringify({ newsUrl }),
                 });
 
                 if (!response.ok) {
