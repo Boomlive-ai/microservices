@@ -64,6 +64,13 @@
             margin-bottom: 15px;
         }
 
+        .language-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
         .url-input {
             flex: 1;
             padding: 15px;
@@ -74,6 +81,23 @@
         }
 
         .url-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .target-select {
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            min-width: 150px;
+        }
+
+        .target-select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -101,6 +125,32 @@
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+        }
+
+        /* Detected Language Styles */
+        .detected-language {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .detected-language.detected {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: #065f46;
+        }
+
+        .language-label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+            margin-right: 8px;
+            white-space: nowrap;
         }
 
         .error-message {
@@ -405,6 +455,11 @@
                 flex-direction: column;
             }
             
+            .language-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
             .article-title {
                 font-size: 1.8em;
             }
@@ -440,7 +495,7 @@
         <div class="translator-container">
             <div class="header">
                 <h1>🔄 BOOM Article Translator</h1>
-                <p>Enter a BOOM English article URL to get the Hindi translation</p>
+                <p>Translate BOOM articles between English, Hindi & Bangla with auto language detection</p>
             </div>
 
             <div class="input-section">
@@ -454,6 +509,22 @@
                     <button id="translateBtn" class="translate-btn">
                         🔄 Translate
                     </button>
+                </div>
+                
+                <!-- Detected Language Display -->
+                <div id="detectedLang" class="detected-language">
+                    🔍 Detected Language: —
+                </div>
+
+                <!-- Target Language Selection -->
+                <div class="language-controls">
+                    <span class="language-label">Translate to:</span>
+                    <select id="targetLanguage" class="target-select">
+                        <option value="">Select target language</option>
+                        <option value="english">English</option>
+                        <option value="hindi">Hindi</option>
+                        <option value="bangla">Bangla</option>
+                    </select>
                 </div>
                 
                 <div id="errorMessage" class="error-message hidden"></div>
@@ -476,6 +547,47 @@
         const errorMessage = document.getElementById('errorMessage');
         const loadingMessage = document.getElementById('loadingMessage');
         const articlePreview = document.getElementById('articlePreview');
+        const detectedLangEl = document.getElementById('detectedLang');
+        const targetLanguageSelect = document.getElementById('targetLanguage');
+
+        // Function to detect source language from URL
+        function detectSourceFromUrl(url) {
+            try {
+                const host = new URL(url).hostname.toLowerCase();
+                if (host.includes('hindi.boomlive.in')) return 'hindi';
+                if (host.includes('bangla.boomlive.in')) return 'bangla';
+                if (host.includes('boomlive.in')) return 'english';
+            } catch {}
+            return null;
+        }
+
+        // Update target language options based on detected source
+        function updateTargetLanguageOptions(detectedSource) {
+            const options = targetLanguageSelect.querySelectorAll('option');
+            
+            // Reset all options
+            options.forEach(option => {
+                option.disabled = false;
+                option.style.display = '';
+            });
+
+            // Disable the detected source language
+            if (detectedSource) {
+                const sourceOption = targetLanguageSelect.querySelector(`option[value="${detectedSource}"]`);
+                if (sourceOption) {
+                    sourceOption.disabled = true;
+                    sourceOption.style.display = 'none';
+                }
+
+                // If current selection is same as source, reset to first available
+                if (targetLanguageSelect.value === detectedSource) {
+                    const firstAvailable = Array.from(options).find(opt => opt.value && !opt.disabled);
+                    if (firstAvailable) {
+                        targetLanguageSelect.value = firstAvailable.value;
+                    }
+                }
+            }
+        }
 
         // Extract ID from BOOM Live URL
         function extractNewsId(url) {
@@ -488,28 +600,18 @@
             if (typeof content !== 'string') return content;
             
             return content
-                // Fix escaped quotes
                 .replace(/\\"/g, '"')
                 .replace(/\\'/g, "'")
-                
-                // Fix backslashes
                 .replace(/\\\\/g, '\\')
-                
-                // Fix newlines and special characters
                 .replace(/\\n/g, '\n')
                 .replace(/\\r/g, '\r')
                 .replace(/\\t/g, '\t')
-                
-                // Clean up HTML entities
                 .replace(/&quot;/g, '"')
                 .replace(/&apos;/g, "'")
                 .replace(/&amp;/g, '&')
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
-                
-                // Remove unwanted inline styles (but keep embed styles)
                 .replace(/style="([^"]*)"/g, (match, styles) => {
-                    // Keep essential styles for embeds
                     if (styles.includes('padding:56.25%') || 
                         styles.includes('position:relative') || 
                         styles.includes('position:absolute')) {
@@ -517,15 +619,9 @@
                     }
                     return '';
                 })
-                
-                // Clean up extra whitespace
                 .replace(/\s+/g, ' ')
                 .replace(/>\s+</g, '><')
-                
-                // Remove empty tags
                 .replace(/<([^>]+)>\s*<\/\1>/g, '')
-                
-                // Trim whitespace
                 .trim();
         }
 
@@ -547,7 +643,6 @@
 
             const article = data.data.news[0];
             
-            // Clean all text fields comprehensively with safety checks
             const cleanedArticle = {
                 ...article,
                 heading: deepCleanContent(safeGet(article, 'heading')),
@@ -572,7 +667,7 @@
             };
         }
 
-        // Format date to Hindi
+        // Format date
         function formatDate(dateString) {
             if (!dateString) return 'Unknown Date';
             try {
@@ -587,19 +682,17 @@
             }
         }
 
-        // Show error message
+        // Show/Hide functions
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.classList.remove('hidden');
             hideLoading();
         }
 
-        // Hide error message
         function hideError() {
             errorMessage.classList.add('hidden');
         }
 
-        // Show loading message
         function showLoading() {
             loadingMessage.textContent = '🔄 Translating article... Please wait';
             loadingMessage.classList.remove('hidden');
@@ -608,7 +701,6 @@
             isLoading = true;
         }
 
-        // Hide loading message
         function hideLoading() {
             loadingMessage.classList.add('hidden');
             translateBtn.textContent = '🔄 Translate';
@@ -616,7 +708,7 @@
             isLoading = false;
         }
 
-        // Generate article HTML with null safety
+        // Generate article HTML
         function generateArticleHTML(article) {
             const reviewType = safeGet(article, 'fast_check_review_type', 'unknown').toLowerCase();
             const categoryName = safeGet(article, 'maincat_name', 'Article');
@@ -629,7 +721,6 @@
             
             return `
                 <div class="boom-article">
-                    <!-- Article Header -->
                     <div class="article-header">
                         <div class="category-badge">
                             <span class="fact-check-badge">${categoryName}</span>
@@ -663,7 +754,6 @@
                         </div>
                     </div>
 
-                    <!-- Featured Image -->
                     ${article.mediaId ? `
                         <div class="featured-image">
                             <img 
@@ -674,12 +764,10 @@
                         </div>
                     ` : ''}
 
-                    <!-- Article Description -->
                     <div class="article-description">
                         ${description}
                     </div>
 
-                    <!-- Claim Review -->
                     ${safeGet(article, 'show_claim_review') === "Yes" && claimReview ? `
                         <div class="claim-review-section">
                             <h3>📋 दावा समीक्षा</h3>
@@ -689,12 +777,10 @@
                         </div>
                     ` : ''}
 
-                    <!-- Article Content -->
                     <div class="article-content">
                         ${story}
                     </div>
 
-                    <!-- Tags -->
                     ${tags ? `
                         <div class="article-tags">
                             <h4>🏷️ टैग्स:</h4>
@@ -706,7 +792,6 @@
                         </div>
                     ` : ''}
 
-                    <!-- Footer Info -->
                     <div class="article-footer">
                         <div class="translation-info">
                             <p><strong>🔄 अनुवाद की जानकारी:</strong></p>
@@ -724,17 +809,28 @@
             if (isLoading) return;
 
             const newsUrl = articleUrlInput.value.trim();
+            const targetLanguage = targetLanguageSelect.value;
             
             if (!newsUrl) {
                 showError('Please enter a valid BOOM Live article URL');
                 return;
             }
 
-            // const newsId = extractNewsId(articleUrl);
-            // if (!newsId) {
-            //     showError('Could not extract article ID from URL. Please check the URL format.');
-            //     return;
-            // }
+            if (!targetLanguage) {
+                showError('Please select a target language');
+                return;
+            }
+
+            const detectedSource = detectSourceFromUrl(newsUrl);
+            if (!detectedSource) {
+                showError('Could not detect source language from URL. Please check the URL format.');
+                return;
+            }
+
+            if (detectedSource === targetLanguage) {
+                showError('Source and target languages cannot be the same');
+                return;
+            }
 
             hideError();
             showLoading();
@@ -746,7 +842,11 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ newsUrl }),
+                    body: JSON.stringify({
+                        newsUrl: newsUrl,
+                        sourceLanguage: detectedSource,
+                        targetLanguage: targetLanguage
+                    }),
                 });
 
                 if (!response.ok) {
@@ -754,30 +854,23 @@
                 }
 
                 const rawData = await response.json();
-                
-                // Process and clean the entire response
                 const processedData = processApiResponse(rawData);
                 
                 if (processedData.success && processedData.data.news.length > 0) {
                     const article = processedData.data.news[0];
-                    
-                    // Generate and display article HTML
                     articlePreview.innerHTML = generateArticleHTML(article);
                     articlePreview.classList.remove('hidden');
 
-                    // Load Twitter widget if there are tweets
                     if (article.story && article.story.includes('twitter-tweet')) {
                         if (window.twttr && window.twttr.widgets) {
                             window.twttr.widgets.load();
                         } else {
-                            // Load Twitter widget script if not already loaded
                             const script = document.createElement('script');
                             script.src = 'https://platform.twitter.com/widgets.js';
                             script.async = true;
                             document.head.appendChild(script);
                         }
                     }
-
                 } else {
                     showError('Failed to translate article. Please try again.');
                 }
@@ -798,10 +891,34 @@
             }
         });
 
-        // Clear error when user starts typing
+        // Auto-detect language when typing/pasting URL
         articleUrlInput.addEventListener('input', function() {
             if (!errorMessage.classList.contains('hidden')) {
                 hideError();
+            }
+
+            const url = articleUrlInput.value.trim();
+            if (!url) {
+                detectedLangEl.textContent = '🔍 Detected Language: —';
+                detectedLangEl.className = 'detected-language';
+                updateTargetLanguageOptions(null);
+                return;
+            }
+
+            const detected = detectSourceFromUrl(url);
+            if (detected) {
+                const languageNames = {
+                    'english': 'English',
+                    'hindi': 'Hindi', 
+                    'bangla': 'Bangla'
+                };
+                detectedLangEl.textContent = `🔍 Detected Language: ${languageNames[detected]}`;
+                detectedLangEl.className = 'detected-language detected';
+                updateTargetLanguageOptions(detected);
+            } else {
+                detectedLangEl.textContent = '🔍 Detected Language: Unknown (Please check URL)';
+                detectedLangEl.className = 'detected-language';
+                updateTargetLanguageOptions(null);
             }
         });
 
