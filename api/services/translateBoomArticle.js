@@ -536,7 +536,7 @@ Keywords: ${sourceArticle.keywords}
 `;
 
   const resp = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4.1-mini",
     messages: [{ role: "user", content: prompt }],
     functions: [articleSchema],
     function_call: { name: "generateLocalizedArticle" }
