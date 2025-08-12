@@ -91,9 +91,18 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 /* 🌐 Language configuration */
 const languageConfig = {
-    en: { name: "English", instruction: "in English" },
-    hi: { name: "Hindi", instruction: "in Hindi (हिंदी में)" },
-    bn: { name: "Bengali", instruction: "in Bengali (বাংলায়)" },
+    en: {
+        name: "English",
+        instruction: "in English"
+    },
+    hi: {
+        name: "Hindi",
+        instruction: "in conversational, everyday Hindi (हिंदी में), avoiding overly formal or Sanskritized words. Use natural expressions — for example, prefer 'इसका मतलब क्या है?' instead of 'इसका अहम क्या है?'. Keep tone friendly and relatable."
+    },
+    bn: {
+        name: "Bengali",
+        instruction: "in conversational, everyday Bengali (বাংলায়), avoiding overly formal or literary শুদ্ধ বাংলা unless needed. Use natural expressions — for example, prefer 'এর মানে কী?' instead of overly formal phrases. Keep tone friendly and relatable."
+    },
     es: { name: "Spanish", instruction: "in Spanish (en español)" },
     fr: { name: "French", instruction: "in French (en français)" },
     // Add more languages as needed
