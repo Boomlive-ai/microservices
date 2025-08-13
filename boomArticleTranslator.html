@@ -540,6 +540,7 @@
     <script>
         // Global variables
         let isLoading = false;
+        let currentTargetLanguage = '';
 
         // DOM elements
         const articleUrlInput = document.getElementById('articleUrl');
@@ -549,6 +550,51 @@
         const articlePreview = document.getElementById('articlePreview');
         const detectedLangEl = document.getElementById('detectedLang');
         const targetLanguageSelect = document.getElementById('targetLanguage');
+
+        // Localization strings
+        const localization = {
+            english: {
+                author: 'Author:',
+                published: 'Published:',
+                readTime: 'Read time:',
+                seconds: 'seconds',
+                claimReview: '📋 Claim Review',
+                tags: '🏷️ Tags:',
+                translationInfo: '🔄 Translation Information:',
+                originalArticleId: 'Original Article ID:',
+                translationTime: 'Translation Time:',
+                reviewer: 'Reviewer:'
+            },
+            hindi: {
+                author: 'लेखक:',
+                published: 'प्रकाशित:',
+                readTime: 'पढ़ने का समय:',
+                seconds: 'सेकंड',
+                claimReview: '📋 दावा समीक्षा',
+                tags: '🏷️ टैग्स:',
+                translationInfo: '🔄 अनुवाद की जानकारी:',
+                originalArticleId: 'मूल लेख ID:',
+                translationTime: 'अनुवाद समय:',
+                reviewer: 'समीक्षाकर्ता:'
+            },
+            bangla: {
+                author: 'লেখক:',
+                published: 'প্রকাশিত:',
+                readTime: 'পড়ার সময়:',
+                seconds: 'সেকেন্ড',
+                claimReview: '📋 দাবি পর্যালোচনা',
+                tags: '🏷️ ট্যাগস:',
+                translationInfo: '🔄 অনুবাদের তথ্য:',
+                originalArticleId: 'মূল নিবন্ধ ID:',
+                translationTime: 'অনুবাদের সময়:',
+                reviewer: 'পর্যালোচনাকারী:'
+            }
+        };
+
+        // Get localized text
+        function getLocalizedText(key, language = currentTargetLanguage) {
+            return localization[language]?.[key] || localization.english[key] || key;
+        }
 
         // Function to detect source language from URL
         function detectSourceFromUrl(url) {
@@ -584,6 +630,7 @@
                     const firstAvailable = Array.from(options).find(opt => opt.value && !opt.disabled);
                     if (firstAvailable) {
                         targetLanguageSelect.value = firstAvailable.value;
+                        currentTargetLanguage = firstAvailable.value;
                     }
                 }
             }
@@ -667,12 +714,18 @@
             };
         }
 
-        // Format date
-        function formatDate(dateString) {
+        // Format date based on target language
+        function formatDate(dateString, language = currentTargetLanguage) {
             if (!dateString) return 'Unknown Date';
             try {
                 const date = new Date(dateString);
-                return date.toLocaleDateString('hi-IN', {
+                const localeMap = {
+                    'hindi': 'hi-IN',
+                    'bangla': 'bn-IN',
+                    'english': 'en-US'
+                };
+                const locale = localeMap[language] || 'en-US';
+                return date.toLocaleDateString(locale, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
@@ -708,7 +761,7 @@
             isLoading = false;
         }
 
-        // Generate article HTML
+        // Generate article HTML with dynamic localization
         function generateArticleHTML(article) {
             const reviewType = safeGet(article, 'fast_check_review_type', 'unknown').toLowerCase();
             const categoryName = safeGet(article, 'maincat_name', 'Article');
@@ -742,14 +795,14 @@
                                     />
                                 ` : ''}
                                 <div class="author-details">
-                                    <span class="author-name">लेखक: ${authorName}</span>
+                                    <span class="author-name">${getLocalizedText('author')} ${authorName}</span>
                                     <span class="publish-date">
-                                        प्रकाशित: ${formatDate(article.date_news)}
+                                        ${getLocalizedText('published')} ${formatDate(article.date_news)}
                                     </span>
                                 </div>
                             </div>
                             <div class="read-time">
-                                पढ़ने का समय: ${safeGet(article, 'news_read_time_sec', 0)} सेकंड
+                                ${getLocalizedText('readTime')} ${safeGet(article, 'news_read_time_sec', 0)} ${getLocalizedText('seconds')}
                             </div>
                         </div>
                     </div>
@@ -770,7 +823,7 @@
 
                     ${safeGet(article, 'show_claim_review') === "Yes" && claimReview ? `
                         <div class="claim-review-section">
-                            <h3>📋 दावा समीक्षा</h3>
+                            <h3>${getLocalizedText('claimReview')}</h3>
                             <div class="claim-box">
                                 ${claimReview}
                             </div>
@@ -783,7 +836,7 @@
 
                     ${tags ? `
                         <div class="article-tags">
-                            <h4>🏷️ टैग्स:</h4>
+                            <h4>${getLocalizedText('tags')}</h4>
                             <div class="tags-container">
                                 ${tags.split(',').map(tag => 
                                     `<span class="tag">${tag.trim()}</span>`
@@ -794,10 +847,10 @@
 
                     <div class="article-footer">
                         <div class="translation-info">
-                            <p><strong>🔄 अनुवाद की जानकारी:</strong></p>
-                            <p>मूल लेख ID: ${safeGet(article, 'translated_from', 'Unknown')}</p>
-                            <p>अनुवाद समय: ${formatDate(article.translation_timestamp)}</p>
-                            <p>समीक्षाकर्ता: ${safeGet(article, 'reviewed_by', 'Unknown')}</p>
+                            <p><strong>${getLocalizedText('translationInfo')}</strong></p>
+                            <p>${getLocalizedText('originalArticleId')} ${safeGet(article, 'translated_from', 'Unknown')}</p>
+                            <p>${getLocalizedText('translationTime')} ${formatDate(article.translation_timestamp)}</p>
+                            <p>${getLocalizedText('reviewer')} ${safeGet(article, 'reviewed_by', 'Unknown')}</p>
                         </div>
                     </div>
                 </div>
@@ -831,6 +884,9 @@
                 showError('Source and target languages cannot be the same');
                 return;
             }
+
+            // Update current target language for localization
+            currentTargetLanguage = targetLanguage;
 
             hideError();
             showLoading();
@@ -889,6 +945,11 @@
             if (e.key === 'Enter') {
                 translateArticle();
             }
+        });
+
+        // Update current target language when selection changes
+        targetLanguageSelect.addEventListener('change', function() {
+            currentTargetLanguage = this.value;
         });
 
         // Auto-detect language when typing/pasting URL
